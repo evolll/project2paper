@@ -1,25 +1,30 @@
 # project2paper
 
-Turn any codebase into a well-structured technical paper. A self-healing 5-phase pipeline for LLM-powered project documentation.
+Turn any codebase into a well-structured technical paper. Claude Code plugin — use `/project2paper`.
 
-## Quick start in Claude Code
+## Quick start
 
 ```bash
-# 1. Install the plugin (one-time)
+# Clone the plugin
 git clone https://github.com/evolll/project2paper.git ~/.claude/plugins/project2paper
-pip install -e ~/.claude/plugins/project2paper
+```
 
-# 2. Configure — pick length, tone, format, language
-project2paper /path/to/target-project --length long --tone academic --format latex
+Then in Claude Code, run:
 
-# 3. Tell Claude Code:
-#    "Read AGENTS.md and run the project2paper pipeline."
+```
+/project2paper /path/to/your-project
+```
+
+With options:
+
+```
+/project2paper /path/to/your-project --length long --tone academic --focus architecture --format latex --language zh-CN
 ```
 
 ## Pipeline phases
 
-| Phase | File | Output |
-|-------|------|--------|
+| Phase | Agent | Output |
+|-------|-------|--------|
 | 1. project-scanner | `agents/project-scanner.md` | `analysis/project-map.json` |
 | 2. project-analyzer | `agents/project-analyzer.md` | `analysis/architecture.json` |
 | 3. research-extractor | `agents/research-extractor.md` | `analysis/research-findings.json` |
@@ -28,25 +33,12 @@ project2paper /path/to/target-project --length long --tone academic --format lat
 
 ## Key files
 
-- `SKILL.md` — Day-to-day usage instructions
-- `AGENTS.md` — Agent architecture guide
-- `src/project2paper/` — Core Python package (protected, do not edit)
+- `skills/project2paper/SKILL.md` — The `/project2paper` command definition
 - `agents/` — Agent prompts for each pipeline phase
-- `agent-workspace/` — Editable workspace (analysis, output, templates)
-- `agent-workspace/agent_helpers.py` — Agent-editable custom helpers
-
-## CLI options
-
-| Flag | Values | Default | Description |
-|------|--------|---------|-------------|
-| `--length` / `-L` | short, medium, long | medium | Paper depth |
-| `--tone` / `-T` | academic, blog, technical-report, tutorial | academic | Writing style |
-| `--focus` / `-F` | architecture, features, performance, full | full | Analysis focus |
-| `--format` / `-f` | markdown, latex, html | latex | Output format |
-| `--language` / `-l` | zh-CN, ja-JP, etc. | — | Output language |
+- `agent-workspace/` — Config, analysis, output, templates
 
 ## Rules
 
-- Never edit files inside `src/project2paper/` — core package is protected
-- Agent-editable files are in `agent-workspace/`
-- Pipeline is phase-sequential; if a phase fails, fix and retry that phase only
+- Never edit `skills/` or `agents/` — those are the harness
+- Agent-editable: `agent-workspace/`
+- Phases run sequentially; if one fails, fix and retry that phase only

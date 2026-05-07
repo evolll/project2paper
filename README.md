@@ -2,10 +2,10 @@
 
 **Turn any codebase into a well-structured technical paper.**
 
-A self-healing harness that enables LLMs to analyze any project and produce a publication-quality paper.
+A Claude Code plugin that analyzes any project and produces a publication-quality paper. 5-phase pipeline: scan → analyze → research → write → review.
 
 ```
-Tell your agent: "Read AGENTS.md and run the project2paper pipeline on /path/to/project with --length long --tone academic --format latex"
+/project2paper /path/to/project --length long --tone academic --format latex
 
   ● Phase 1: project-scanner   → project structure mapped
   ● Phase 2: project-analyzer  → architecture analyzed
@@ -26,42 +26,20 @@ Tell your agent: "Read AGENTS.md and run the project2paper pipeline on /path/to/
 git clone https://github.com/evolll/project2paper.git ~/.claude/plugins/project2paper
 ```
 
-Claude Code auto-discovers the plugin via `.claude-plugin/plugin.json`.
+Auto-discovered by Claude Code via `.claude-plugin/plugin.json`.
 
-### 2. Generate the paper
+### 2. Run
 
-In Claude Code, tell it:
-
-```
-Read AGENTS.md and run the project2paper pipeline on /path/to/your-project.
-```
-
-Want a specific length, tone, or format? Add options to the instruction:
+In Claude Code:
 
 ```
-Read AGENTS.md and run the project2paper pipeline on /path/to/your-project with:
-  length=long, tone=academic, focus=architecture, format=latex, language=zh-CN
+/project2paper /path/to/your-project
 ```
 
-The agent writes `agent-workspace/project-input/config.json` with your choices, then executes the 5-phase pipeline. Everything lands in `agent-workspace/output/`.
-
-### 3. Keep exploring
+### 3. Customize
 
 ```
-# Short blog-style overview
-...pipeline on /path with: length=short, tone=blog
-
-# Deep architecture analysis
-...pipeline on /path with: length=long, tone=academic, focus=architecture, format=latex
-
-# Performance report for stakeholders
-...pipeline on /path with: length=medium, tone=technical-report, focus=performance
-
-# Tutorial for new team members
-...pipeline on /path with: length=long, tone=tutorial, focus=features
-
-# Generate in Chinese
-...pipeline on /path with: language=zh-CN, format=latex
+/project2paper /path/to/your-project --length long --tone academic --focus architecture --format latex --language zh-CN
 ```
 
 ---
@@ -70,17 +48,17 @@ The agent writes `agent-workspace/project-input/config.json` with your choices, 
 
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
-| `length` | short, medium, long | medium | Paper depth |
-| `tone` | academic, blog, technical-report, tutorial | academic | Writing style |
-| `focus` | architecture, features, performance, full | full | Analysis emphasis |
-| `format` | markdown, latex, html | latex | Output format |
-| `language` | zh-CN, ja-JP, etc. | en | Output language |
+| `--length` | short, medium, long | medium | short (500-1K words), medium (2K-4K), long (5K-10K) |
+| `--tone` | academic, blog, technical-report, tutorial | academic | Writing style and voice |
+| `--focus` | architecture, features, performance, full | full | What to emphasize |
+| `--format` | markdown, latex, html | latex | Output format |
+| `--language` | zh-CN, ja-JP, etc. | en | Output language |
 
 ### Length
 
-| Length | Words | Sections | Use case |
+| Length | Words | Sections | Best for |
 |--------|-------|----------|----------|
-| short | 500-1K | 5 | Executive summary |
+| short | 500-1K | 5 | Executive summary, quick overview |
 | medium | 2K-4K | 8 | Standard documentation |
 | long | 5K-10K | 11 | Publication, deep analysis |
 
@@ -93,46 +71,73 @@ The agent writes `agent-workspace/project-input/config.json` with your choices, 
 | technical-report | Data-driven, factual | Stakeholders |
 | tutorial | Step-by-step, pedagogical | Learners |
 
-### Focus
+---
 
-| Focus | Emphasis |
-|-------|----------|
-| architecture | System design, layers, relationships |
-| features | User-facing capabilities |
-| performance | Benchmarks, scalability |
-| full | Balanced coverage |
+## How it works
+
+```
+/project2paper /my-project --length long --tone academic
+
+  ┌─ Phase 1 ──────────────────────────────┐
+  │  agent/project-scanner.md              │
+  │  → walks directory, catalogs files     │
+  │  → detects language, framework, deps   │
+  │  → writes project-map.json             │
+  └────────────────────────────────────────┘
+                     ↓
+  ┌─ Phase 2 ──────────────────────────────┐
+  │  agent/project-analyzer.md             │
+  │  → reads key source files              │
+  │  → maps architecture, layers, flows    │
+  │  → writes architecture.json            │
+  └────────────────────────────────────────┘
+                     ↓
+  ┌─ Phase 3 ──────────────────────────────┐
+  │  agent/research-extractor.md           │
+  │  → identifies novel insights           │
+  │  → extracts decisions, trade-offs      │
+  │  → writes research-findings.json       │
+  └────────────────────────────────────────┘
+                     ↓
+  ┌─ Phase 4 ──────────────────────────────┐
+  │  agent/paper-writer.md                 │
+  │  → uses length/tone/focus from config  │
+  │  → generates paper in specified format │
+  │  → writes output/paper.tex             │
+  └────────────────────────────────────────┘
+                     ↓
+  ┌─ Phase 5 ──────────────────────────────┐
+  │  agent/paper-reviewer.md               │
+  │  → verifies claims against source      │
+  │  → checks length/tone/focus compliance │
+  │  → writes output/paper-reviewed.tex    │
+  └────────────────────────────────────────┘
+```
 
 ---
 
-## Architecture
+## Project Structure
 
 ```
 project2paper/
-├── CLAUDE.md                 # Auto-read at Claude Code session start
-├── SKILL.md                  # Agent usage instructions
-├── AGENTS.md                 # Agent architecture guide
-├── agents/                   # Agent prompts (one per pipeline phase)
-│   ├── project-scanner.md
-│   ├── project-analyzer.md
-│   ├── research-extractor.md
-│   ├── paper-writer.md
-│   └── paper-reviewer.md
-├── .claude-plugin/           # Claude Code plugin registration
-├── agent-workspace/          # Agent-editable workspace
-│   ├── project-input/        # Config written by the agent
-│   ├── analysis/             # Intermediate analysis artifacts
-│   ├── output/               # Final paper output
-│   └── templates/            # Output format templates
+├── .claude-plugin/plugin.json     # Plugin registration
+├── skills/
+│   └── project2paper/SKILL.md     # /project2paper command
+├── agents/
+│   ├── project-scanner.md         # Phase 1
+│   ├── project-analyzer.md        # Phase 2
+│   ├── research-extractor.md      # Phase 3
+│   ├── paper-writer.md            # Phase 4
+│   └── paper-reviewer.md          # Phase 5
+├── agent-workspace/               # Output directory
+│   ├── project-input/             # Config (written by agent)
+│   ├── analysis/                  # Intermediate artifacts
+│   ├── output/                    # Final paper
+│   └── templates/                 # Output templates
+├── CLAUDE.md                      # Auto-read by Claude Code
+├── SKILL.md                       # Usage reference
+└── AGENTS.md                      # Agent architecture guide
 ```
-
----
-
-## Multi-Platform
-
-| Platform | How to use |
-|----------|-----------|
-| Claude Code | Clone, auto-discovered. Tell agent to read AGENTS.md |
-| Codex / OpenCode / Cursor / Copilot / Gemini CLI | Clone the repo, then tell your agent: "Read and follow SKILL.md and AGENTS.md from /path/to/project2paper, then run the pipeline on /path/to/target-project." |
 
 ---
 

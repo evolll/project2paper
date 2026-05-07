@@ -1,43 +1,39 @@
 # project2paper — Agent Guide
 
-project2paper is a thin harness that connects coding agents to any project, enabling them to analyze it and generate a well-structured technical paper.
+project2paper is a Claude Code plugin that generates a technical paper from any codebase via a 5-phase pipeline.
+
+## When the user runs `/project2paper`
+
+1. Read `skills/project2paper/SKILL.md` — it defines the full flow
+2. Parse arguments: project path, `--length`, `--tone`, `--focus`, `--format`, `--language`
+3. Write `agent-workspace/project-input/config.json` with parsed settings
+4. Execute Phase 1–5 by reading each agent prompt in sequence
 
 ## Code priorities
 - **Clarity** — The paper should be readable and well-structured
 - **Accuracy** — Every claim must be verifiable from the source code
 - **Depth** — Go beyond surface-level; analyze trade-offs, patterns, decisions
 
-## Overview
+## File structure
 
-### Agent prompts (read these for each phase)
-- `agents/project-scanner.md` — Phase 1: scan and map the project
-- `agents/project-analyzer.md` — Phase 2: deep architecture analysis
-- `agents/research-extractor.md` — Phase 3: focus-aware insight extraction
-- `agents/paper-writer.md` — Phase 4: write paper (uses length/tone/focus from config)
-- `agents/paper-reviewer.md` — Phase 5: review and refine
+| Path | Purpose |
+|------|---------|
+| `skills/project2paper/SKILL.md` | `/project2paper` command — reads this first |
+| `agents/project-scanner.md` | Phase 1: scan project structure |
+| `agents/project-analyzer.md` | Phase 2: architecture analysis |
+| `agents/research-extractor.md` | Phase 3: insight extraction |
+| `agents/paper-writer.md` | Phase 4: paper writing |
+| `agents/paper-reviewer.md` | Phase 5: review and refine |
+| `agent-workspace/project-input/config.json` | User settings written by Phase 1 pre-flight |
+| `agent-workspace/analysis/` | Intermediate analysis artifacts |
+| `agent-workspace/output/` | Final paper output |
+| `agent-workspace/templates/` | Output format templates |
 
-### Agent-editable files
-- `agent-workspace/agent_helpers.py` — Custom analysis or paper-generation helpers
-- `agent-workspace/templates/` — Output format templates with length variants
+## Instructions
 
-### Config file (write this first)
-- `agent-workspace/project-input/config.json` — Write with user's length/tone/focus/format/language choices before starting Phase 1
-
-### Session artifact files
-- `agent-workspace/analysis/project-map.json` — Project structure map
-- `agent-workspace/analysis/architecture.json` — Architecture analysis
-- `agent-workspace/analysis/research-findings.json` — Research insights
-- `agent-workspace/output/paper.md` — Generated paper
-
-## Instructions for agents
-
-1. Read this file first
-2. Read SKILL.md for usage instructions
-3. Ask the user for their preferences, or read them from the instructions
-4. Write `agent-workspace/project-input/config.json` with length/tone/focus/format/language
-5. Read the agent prompt for the current pipeline phase
-6. Execute the phase — adjust depth based on `length`, tone based on `tone`, emphasis based on `focus`
-7. Save outputs to the correct paths
-8. Proceed to the next phase
-
-Remember: you drive the pipeline. The harness provides structure; the intelligence is yours.
+1. Read `skills/project2paper/SKILL.md` first — follow its flow
+2. Parse user arguments, write config.json
+3. For each phase, read the corresponding agent prompt and execute
+4. Adjust depth based on `length`, tone based on `tone`, emphasis based on `focus`
+5. Save outputs to the correct paths
+6. Present the final output path to the user

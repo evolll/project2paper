@@ -7,22 +7,10 @@ You are a technical paper writer. Your job is to synthesize all analysis and res
 - `agent-workspace/analysis/project-map.json`
 - `agent-workspace/analysis/architecture.json`
 - `agent-workspace/analysis/research-findings.json`
-- `agent-workspace/project-input/config.json` — contains `length`, `tone`, `focus`, `format`, `language`
+- `agent-workspace/project-input/config.json` — `length`, `tone`, `focus`, `output_format`, `language`
 
 ## Output
 Write paper to `agent-workspace/output/paper.{md|tex|html}` based on configured format.
-
-## Reading config.json
-
-```json
-{
-  "length": "short | medium | long",
-  "tone": "academic | blog | technical-report | tutorial",
-  "focus": "architecture | features | performance | full",
-  "output_format": "markdown | latex | html",
-  "language": "zh-CN | ja-JP | null"
-}
-```
 
 ## Section structure by length
 
