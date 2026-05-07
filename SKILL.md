@@ -4,55 +4,48 @@
 
 project2paper takes a project path and generates a well-structured technical paper. The agent drives the full pipeline.
 
-### Quick start
+### Quick start in Claude Code
 
-```
-Read and follow SKILL.md and AGENTS.md from /path/to/project2paper.
-Then run the pipeline on /path/to/target-project.
+```bash
+# 1. Install (one-time)
+git clone https://github.com/evolll/project2paper.git ~/.claude/plugins/project2paper
+pip install -e ~/.claude/plugins/project2paper
+
+# 2. Configure the project
+project2paper /path/to/target-project --length long --tone academic --format latex
+
+# 3. In Claude Code, tell it:
+#    "Read AGENTS.md and run the project2paper pipeline."
 ```
 
 ### Interactive mode (wizard)
 
-Run without arguments to enter the interactive wizard — it will ask you step by step:
+Run without arguments to enter the interactive wizard:
 
 ```bash
 project2paper
 ```
 
-Or force it with `-i`:
+You'll be prompted to choose: project path, paper length, tone, focus area, output format (default: **latex**), and language.
+
+### CLI flags (non-interactive)
 
 ```bash
-project2paper -i
-```
-
-You'll be prompted to choose:
-1. **Project path** — browse or type
-2. **Paper length** — short / medium / long
-3. **Writing tone** — academic / blog / technical-report / tutorial
-4. **Analysis focus** — architecture / features / performance / full
-5. **Output format** — markdown / latex / html (default: **latex**)
-6. **Language** — 11 languages including zh-CN, ja-JP, ko-KR
-
-### Non-interactive (CLI flags)
-
-```bash
-# Quick overview (short paper, blog tone)
+# Quick overview
 project2paper /path/to/target-project --length short --tone blog
 
 # Full academic paper
-project2paper /path/to/target-project --length long --tone academic --focus architecture
+project2paper /path/to/target-project --length long --tone academic --focus architecture --format latex
 
-# Technical report focused on performance
+# Performance report
 project2paper /path/to/target-project --length medium --tone technical-report --focus performance
 
-# Tutorial for new developers
+# Tutorial
 project2paper /path/to/target-project --length long --tone tutorial --focus features
 
 # Chinese output
 project2paper /path/to/target-project --language zh-CN --format latex
 ```
-
-Then tell your agent: "Run the project2paper pipeline on /path/to/target-project."
 
 ### Options
 
@@ -61,7 +54,7 @@ Then tell your agent: "Run the project2paper pipeline on /path/to/target-project
 | `--length` / `-L` | short, medium, long | medium | Paper depth and word count |
 | `--tone` / `-T` | academic, blog, technical-report, tutorial | academic | Writing style |
 | `--focus` / `-F` | architecture, features, performance, full | full | Analysis emphasis |
-| `--format` / `-f` | markdown, latex, html | markdown | Output format |
+| `--format` / `-f` | markdown, latex, html | latex | Output format |
 | `--language` / `-l` | zh-CN, ja-JP, etc. | — | Output language |
 | `--output` / `-o` | path | auto | Output file path |
 
