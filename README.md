@@ -13,26 +13,59 @@ A self-healing harness that enables LLMs to analyze any project and produce a pu
   ● Phase 4: paper-writer      → paper drafted (length=long, tone=academic)
   ● Phase 5: paper-reviewer    → paper reviewed and refined
   │
-  ✓ agent-workspace/output/paper.md — done
+  ✓ agent-workspace/output/paper.tex — done
 ```
 
-## Quick start
+## Quick Start
+
+### 1. Install
 
 ```bash
 pip install -e .
-
-# Interactive wizard — pick length, tone, format, language step by step
-project2paper
-# (default output: LaTeX)
-
-# Short overview
-project2paper /path/to/project --length short --tone blog
-
-# Full academic paper
-project2paper /path/to/project --length long --tone academic --format latex
 ```
 
-Then tell your agent: "Run the project2paper pipeline on /path/to/project."
+### 2. Configure
+
+```bash
+project2paper
+```
+
+An interactive wizard asks you step by step: project path, paper length, tone, focus area, output format (default: **LaTeX**), and language.
+
+Or skip the wizard with CLI flags:
+
+```bash
+project2paper /path/to/project --length long --tone academic --format latex --language zh-CN
+```
+
+### 3. Generate the paper
+
+Tell your agent:
+
+```
+Read SKILL.md and AGENTS.md, then run the project2paper pipeline on /path/to/project.
+```
+
+A 5-phase agent pipeline scans your project, analyzes the architecture, extracts research insights, writes the paper, and reviews it — all saved to `agent-workspace/output/paper.tex`.
+
+### 4. Keep exploring
+
+```bash
+# Short blog-style overview
+project2paper /path/to/project --length short --tone blog
+
+# Deep architecture-focused paper
+project2paper /path/to/project --length long --tone academic --focus architecture
+
+# Performance report for stakeholders
+project2paper /path/to/project --length medium --tone technical-report --focus performance
+
+# Tutorial for new team members
+project2paper /path/to/project --length long --tone tutorial --focus features
+
+# Japanese output
+project2paper /path/to/project --language ja-JP
+```
 
 ## Options
 
