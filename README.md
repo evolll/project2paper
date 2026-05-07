@@ -21,11 +21,15 @@ A self-healing harness that enables LLMs to analyze any project and produce a pu
 ```bash
 pip install -e .
 
+# Interactive wizard — pick length, tone, format, language step by step
+project2paper
+# (default output: LaTeX)
+
 # Short overview
 project2paper /path/to/project --length short --tone blog
 
 # Full academic paper
-project2paper /path/to/project --length long --tone academic
+project2paper /path/to/project --length long --tone academic --format latex
 ```
 
 Then tell your agent: "Run the project2paper pipeline on /path/to/project."

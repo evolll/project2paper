@@ -11,7 +11,29 @@ Read and follow SKILL.md and AGENTS.md from /path/to/project2paper.
 Then run the pipeline on /path/to/target-project.
 ```
 
-### Interactive use
+### Interactive mode (wizard)
+
+Run without arguments to enter the interactive wizard — it will ask you step by step:
+
+```bash
+project2paper
+```
+
+Or force it with `-i`:
+
+```bash
+project2paper -i
+```
+
+You'll be prompted to choose:
+1. **Project path** — browse or type
+2. **Paper length** — short / medium / long
+3. **Writing tone** — academic / blog / technical-report / tutorial
+4. **Analysis focus** — architecture / features / performance / full
+5. **Output format** — markdown / latex / html (default: **latex**)
+6. **Language** — 11 languages including zh-CN, ja-JP, ko-KR
+
+### Non-interactive (CLI flags)
 
 ```bash
 # Quick overview (short paper, blog tone)
@@ -27,7 +49,7 @@ project2paper /path/to/target-project --length medium --tone technical-report --
 project2paper /path/to/target-project --length long --tone tutorial --focus features
 
 # Chinese output
-project2paper /path/to/target-project --language zh-CN
+project2paper /path/to/target-project --language zh-CN --format latex
 ```
 
 Then tell your agent: "Run the project2paper pipeline on /path/to/target-project."
