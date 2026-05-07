@@ -9,12 +9,6 @@ project2paper is a thin harness that connects coding agents to any project, enab
 
 ## Overview
 
-### Core code (protected — do not edit)
-- `src/project2paper/run.py` — CLI entry point with --length/--tone/--focus flags
-- `src/project2paper/pipeline.py` — Pipeline phase definitions
-- `src/project2paper/helpers.py` — Auto-imported utility functions
-- `src/project2paper/templates.py` — Length/tone/focus section templates
-
 ### Agent prompts (read these for each phase)
 - `agents/project-scanner.md` — Phase 1: scan and map the project
 - `agents/project-analyzer.md` — Phase 2: deep architecture analysis
@@ -26,8 +20,10 @@ project2paper is a thin harness that connects coding agents to any project, enab
 - `agent-workspace/agent_helpers.py` — Custom analysis or paper-generation helpers
 - `agent-workspace/templates/` — Output format templates with length variants
 
+### Config file (write this first)
+- `agent-workspace/project-input/config.json` — Write with user's length/tone/focus/format/language choices before starting Phase 1
+
 ### Session artifact files
-- `agent-workspace/project-input/config.json` — Contains length/tone/focus/format/language
 - `agent-workspace/analysis/project-map.json` — Project structure map
 - `agent-workspace/analysis/architecture.json` — Architecture analysis
 - `agent-workspace/analysis/research-findings.json` — Research insights
@@ -36,11 +32,12 @@ project2paper is a thin harness that connects coding agents to any project, enab
 ## Instructions for agents
 
 1. Read this file first
-2. Read SKILL.md for CLI usage
-3. Check `agent-workspace/project-input/config.json` for length/tone/focus settings
-4. Read the agent prompt for the current pipeline phase
-5. Execute the phase — adjust depth based on `length`, tone based on `tone`, emphasis based on `focus`
-6. Save outputs to the correct paths
-7. Proceed to the next phase
+2. Read SKILL.md for usage instructions
+3. Ask the user for their preferences, or read them from the instructions
+4. Write `agent-workspace/project-input/config.json` with length/tone/focus/format/language
+5. Read the agent prompt for the current pipeline phase
+6. Execute the phase — adjust depth based on `length`, tone based on `tone`, emphasis based on `focus`
+7. Save outputs to the correct paths
+8. Proceed to the next phase
 
 Remember: you drive the pipeline. The harness provides structure; the intelligence is yours.

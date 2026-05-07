@@ -2,10 +2,10 @@
 
 **Turn any codebase into a well-structured technical paper.**
 
-A self-healing harness that enables LLMs (Claude Code, Codex, OpenCode, Cursor, Copilot, Gemini CLI, and more) to analyze any project and produce a publication-quality paper. Supports multiple lengths, tones, focus areas, languages, and output formats.
+A self-healing harness that enables LLMs to analyze any project and produce a publication-quality paper.
 
 ```
-  project2paper ./my-project --length long --tone academic --focus architecture --format latex
+Tell your agent: "Read AGENTS.md and run the project2paper pipeline on /path/to/project with --length long --tone academic --format latex"
 
   ● Phase 1: project-scanner   → project structure mapped
   ● Phase 2: project-analyzer  → architecture analyzed
@@ -13,141 +13,126 @@ A self-healing harness that enables LLMs (Claude Code, Codex, OpenCode, Cursor, 
   ● Phase 4: paper-writer      → paper drafted
   ● Phase 5: paper-reviewer    → paper reviewed and refined
   │
-  ✓ agent-workspace/output/paper.tex — ready for arXiv / conference submission
+  ✓ agent-workspace/output/paper.tex — done
 ```
 
 ---
 
 ## Quick Start
 
-### 1. Install the plugin
+### 1. Clone
 
 ```bash
 git clone https://github.com/evolll/project2paper.git ~/.claude/plugins/project2paper
-pip install -e ~/.claude/plugins/project2paper
 ```
 
-The plugin is auto-discovered by Claude Code via `.claude-plugin/plugin.json`. No further setup needed.
+Claude Code auto-discovers the plugin via `.claude-plugin/plugin.json`.
 
-### 2. Configure the project
+### 2. Generate the paper
 
-```bash
-project2paper /path/to/your-project --length long --tone academic --format latex
-```
-
-Or use the interactive wizard (no arguments):
-
-```bash
-project2paper
-```
-
-You'll be asked step by step: project path, paper length, tone, focus area, output format, and language.
-
-| Flag | Values | Default | Description |
-|------|--------|---------|-------------|
-| `--length` / `-L` | short, medium, long | medium | Paper depth |
-| `--tone` / `-T` | academic, blog, technical-report, tutorial | academic | Writing style |
-| `--focus` / `-F` | architecture, features, performance, full | full | Analysis emphasis |
-| `--format` / `-f` | markdown, latex, html | latex | Output format |
-| `--language` / `-l` | zh-CN, ja-JP, etc. | — | Output language |
-
-### 3. Generate the paper
-
-In Claude Code, run:
+In Claude Code, tell it:
 
 ```
-Read AGENTS.md and run the project2paper pipeline.
+Read AGENTS.md and run the project2paper pipeline on /path/to/your-project.
 ```
 
-A 5-phase agent pipeline scans your project, analyzes architecture, extracts research insights, writes the paper, and reviews it. All artifacts are saved to `agent-workspace/`.
+Want a specific length, tone, or format? Add options to the instruction:
 
-### 4. Keep exploring
+```
+Read AGENTS.md and run the project2paper pipeline on /path/to/your-project with:
+  length=long, tone=academic, focus=architecture, format=latex, language=zh-CN
+```
 
-```bash
+The agent writes `agent-workspace/project-input/config.json` with your choices, then executes the 5-phase pipeline. Everything lands in `agent-workspace/output/`.
+
+### 3. Keep exploring
+
+```
 # Short blog-style overview
-project2paper /path/to/project --length short --tone blog
+...pipeline on /path with: length=short, tone=blog
 
-# Deep architecture analysis for a conference paper
-project2paper /path/to/project --length long --tone academic --focus architecture --format latex
+# Deep architecture analysis
+...pipeline on /path with: length=long, tone=academic, focus=architecture, format=latex
 
 # Performance report for stakeholders
-project2paper /path/to/project --length medium --tone technical-report --focus performance
+...pipeline on /path with: length=medium, tone=technical-report, focus=performance
 
 # Tutorial for new team members
-project2paper /path/to/project --length long --tone tutorial --focus features
+...pipeline on /path with: length=long, tone=tutorial, focus=features
 
 # Generate in Chinese
-project2paper /path/to/project --language zh-CN --format latex
+...pipeline on /path with: language=zh-CN, format=latex
 ```
 
 ---
 
-## CLI Reference
+## Options
 
-### Length presets
+| Option | Values | Default | Description |
+|--------|--------|---------|-------------|
+| `length` | short, medium, long | medium | Paper depth |
+| `tone` | academic, blog, technical-report, tutorial | academic | Writing style |
+| `focus` | architecture, features, performance, full | full | Analysis emphasis |
+| `format` | markdown, latex, html | latex | Output format |
+| `language` | zh-CN, ja-JP, etc. | en | Output language |
+
+### Length
 
 | Length | Words | Sections | Use case |
 |--------|-------|----------|----------|
-| short | 500-1K | 5 | Executive summary, quick overview |
-| medium | 2K-4K | 8 | Standard documentation (default) |
+| short | 500-1K | 5 | Executive summary |
+| medium | 2K-4K | 8 | Standard documentation |
 | long | 5K-10K | 11 | Publication, deep analysis |
 
-### Tone presets
+### Tone
 
-| Tone | Audience | Style |
-|------|----------|-------|
-| academic | Researchers, architects | Formal, third-person |
-| blog | Developers, eng managers | Conversational, engaging |
-| technical-report | Eng teams, stakeholders | Data-driven, factual |
-| tutorial | Learners | Step-by-step, pedagogical |
+| Tone | Style | Audience |
+|------|-------|----------|
+| academic | Formal, third-person | Researchers, architects |
+| blog | Conversational, engaging | Developers |
+| technical-report | Data-driven, factual | Stakeholders |
+| tutorial | Step-by-step, pedagogical | Learners |
 
-### Focus presets
+### Focus
 
 | Focus | Emphasis |
 |-------|----------|
-| architecture | System design, layers, component relationships |
-| features | User-facing capabilities and workflows |
-| performance | Benchmarks, scalability, bottlenecks |
-| full | Balanced coverage across all aspects |
+| architecture | System design, layers, relationships |
+| features | User-facing capabilities |
+| performance | Benchmarks, scalability |
+| full | Balanced coverage |
 
 ---
 
 ## Architecture
 
-- `install.md` — Setup and configuration
-- `CLAUDE.md` — Claude Code project overview (auto-read at session start)
-- `SKILL.md` — Day-to-day agent usage instructions
-- `AGENTS.md` — Agent architecture guide
-- `src/project2paper/` — Core Python package (CLI, pipeline, helpers, templates)
-- `agents/` — Agent prompt files for each pipeline phase
-- `.claude-plugin/plugin.json` — Claude Code plugin registration
-- `agent-workspace/` — Editable workspace (analysis, output, templates)
-
----
-
-## Multi-Platform Support
-
-### Claude Code (Native)
-
-The plugin is auto-discovered when cloned. Run `pip install -e .` to install the CLI, then tell Claude Code:
-
 ```
-Read AGENTS.md and run the project2paper pipeline.
-```
-
-### Codex / OpenCode / Cursor / Gemini CLI / Copilot / Others
-
-Clone the repo and install the Python package, then tell your agent:
-
-```
-Read and follow SKILL.md and AGENTS.md from /path/to/project2paper, then run the pipeline on /path/to/target-project.
+project2paper/
+├── CLAUDE.md                 # Auto-read at Claude Code session start
+├── SKILL.md                  # Agent usage instructions
+├── AGENTS.md                 # Agent architecture guide
+├── agents/                   # Agent prompts (one per pipeline phase)
+│   ├── project-scanner.md
+│   ├── project-analyzer.md
+│   ├── research-extractor.md
+│   ├── paper-writer.md
+│   └── paper-reviewer.md
+├── .claude-plugin/           # Claude Code plugin registration
+├── agent-workspace/          # Agent-editable workspace
+│   ├── project-input/        # Config written by the agent
+│   ├── analysis/             # Intermediate analysis artifacts
+│   ├── output/               # Final paper output
+│   └── templates/            # Output format templates
 ```
 
 ---
 
-## Contributing
+## Multi-Platform
 
-PRs welcome! Add agent prompts for domain-specific analysis, improve output templates, or submit example papers.
+| Platform | How to use |
+|----------|-----------|
+| Claude Code | Clone, auto-discovered. Tell agent to read AGENTS.md |
+| Codex / OpenCode / Cursor / Copilot / Gemini CLI | Clone the repo, then tell your agent: "Read and follow SKILL.md and AGENTS.md from /path/to/project2paper, then run the pipeline on /path/to/target-project." |
 
 ---
 

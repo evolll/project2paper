@@ -2,78 +2,37 @@
 
 ## How to use project2paper
 
-project2paper takes a project path and generates a well-structured technical paper. The agent drives the full pipeline.
+project2paper is a harness that generates a well-structured technical paper from any codebase. You drive the 5-phase pipeline.
 
 ### Quick start in Claude Code
 
 ```bash
-# 1. Install (one-time)
+# 1. Clone the harness
 git clone https://github.com/evolll/project2paper.git ~/.claude/plugins/project2paper
-pip install -e ~/.claude/plugins/project2paper
 
-# 2. Configure the project
-project2paper /path/to/target-project --length long --tone academic --format latex
-
-# 3. In Claude Code, tell it:
-#    "Read AGENTS.md and run the project2paper pipeline."
+# 2. In Claude Code, tell it:
+"Read AGENTS.md and run the project2paper pipeline on /path/to/target-project."
 ```
 
-### Interactive mode (wizard)
+### Configuration
 
-Run without arguments to enter the interactive wizard:
+When you tell the agent to run the pipeline, include your preferences:
 
-```bash
-project2paper
+```
+...run the project2paper pipeline on /path with: length=long, tone=academic, format=latex
 ```
 
-You'll be prompted to choose: project path, paper length, tone, focus area, output format (default: **latex**), and language.
-
-### CLI flags (non-interactive)
-
-```bash
-# Quick overview
-project2paper /path/to/target-project --length short --tone blog
-
-# Full academic paper
-project2paper /path/to/target-project --length long --tone academic --focus architecture --format latex
-
-# Performance report
-project2paper /path/to/target-project --length medium --tone technical-report --focus performance
-
-# Tutorial
-project2paper /path/to/target-project --length long --tone tutorial --focus features
-
-# Chinese output
-project2paper /path/to/target-project --language zh-CN --format latex
-```
+The agent will write `agent-workspace/project-input/config.json` with these values before starting Phase 1.
 
 ### Options
 
-| Flag | Values | Default | Description |
-|------|--------|---------|-------------|
-| `--length` / `-L` | short, medium, long | medium | Paper depth and word count |
-| `--tone` / `-T` | academic, blog, technical-report, tutorial | academic | Writing style |
-| `--focus` / `-F` | architecture, features, performance, full | full | Analysis emphasis |
-| `--format` / `-f` | markdown, latex, html | latex | Output format |
-| `--language` / `-l` | zh-CN, ja-JP, etc. | — | Output language |
-| `--output` / `-o` | path | auto | Output file path |
-
-### Length presets
-
-| Length | Words | Sections | Best for |
-|--------|-------|----------|----------|
-| **short** | 500-1K | 5 | Quick overview, executive summary |
-| **medium** | 2K-4K | 8 | Standard documentation (default) |
-| **long** | 5K-10K | 11 | Publication, deep analysis |
-
-### Tone presets
-
-| Tone | Style | Audience |
-|------|-------|----------|
-| **academic** | Formal, objective, third-person | Researchers, architects |
-| **blog** | Conversational, engaging | Developers, eng managers |
-| **technical-report** | Direct, data-driven, factual | Eng teams, stakeholders |
-| **tutorial** | Instructional, step-by-step | Developers learning the codebase |
+| Option | Values | Default | Description |
+|--------|--------|---------|-------------|
+| `length` | short, medium, long | medium | Paper depth |
+| `tone` | academic, blog, technical-report, tutorial | academic | Writing style |
+| `focus` | architecture, features, performance, full | full | Analysis emphasis |
+| `format` | markdown, latex, html | latex | Output format |
+| `language` | zh-CN, ja-JP, etc. | en | Output language |
 
 ### Pipeline phases
 
@@ -82,16 +41,17 @@ project2paper /path/to/target-project --language zh-CN --format latex
 | 1 | project-scanner | Project files | project-map.json |
 | 2 | project-analyzer | project-map.json + source | architecture.json |
 | 3 | research-extractor | analysis files + source | research-findings.json |
-| 4 | paper-writer | all analysis + config (length/tone/focus) | paper.{md/tex/html} |
+| 4 | paper-writer | all analysis + config | paper.{md/tex/html} |
 | 5 | paper-reviewer | paper + source | paper-reviewed.{md/tex/html} |
 
 ### Important rules
 
-1. **Never edit `src/project2paper/`** — core package is protected
+1. **Never edit `agents/`** — agent prompts are protected
 2. **Agent-editable**: `agent-workspace/agent_helpers.py`, `agent-workspace/templates/`
-3. **Intermediate analysis**: `agent-workspace/analysis/`
-4. **Final output**: `agent-workspace/output/`
-5. The agent writes what's missing. If a helper doesn't exist, the agent writes it.
+3. **Config file**: `agent-workspace/project-input/config.json` — write this at the start
+4. **Intermediate analysis**: `agent-workspace/analysis/`
+5. **Final output**: `agent-workspace/output/`
+6. The agent writes what's missing. If a helper doesn't exist, add it to `agent_helpers.py`.
 
 ### Design constraints
 
