@@ -1,0 +1,20 @@
+name: Feature Request
+description: Suggest an improvement for project2paper
+labels: ["enhancement"]
+body:
+  - type: textarea
+    attributes:
+      label: Problem
+      description: What's missing or could be better?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Proposed solution
+      description: How should it work?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Alternatives
+      description: What else have you considered?

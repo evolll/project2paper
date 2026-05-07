@@ -1,0 +1,36 @@
+name: Bug Report
+description: Report a problem with project2paper
+labels: ["bug"]
+body:
+  - type: checkboxes
+    attributes:
+      label: Preflight
+      options:
+        - label: I checked existing issues for duplicates
+          required: true
+        - label: I have the latest version
+          required: true
+  - type: textarea
+    attributes:
+      label: Summary
+      description: What's not working?
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Reproduction
+      description: Steps to reproduce
+      placeholder: |
+        1. project2paper /path/to/project
+        2. Agent says...
+        3. Error: ...
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: Project type
+      description: Language/framework of the project being analyzed
+  - type: input
+    attributes:
+      label: project2paper version
+      description: output of `project2paper --version`

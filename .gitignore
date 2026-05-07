@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.log
+.env
+uv.lock
+*.egg-info/
+.idea/
+.claude/
+agent-workspace/analysis/*
+agent-workspace/output/*
+!agent-workspace/analysis/.gitkeep
+!agent-workspace/output/.gitkeep
+agent-workspace/project-input/*
+!agent-workspace/project-input/.gitkeep

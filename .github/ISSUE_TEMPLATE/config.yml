@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Usage questions
+    url: https://github.com/your-org/project2paper/discussions
+    about: Please ask usage questions in Discussions
+  - name: Install help
+    url: https://github.com/your-org/project2paper/blob/main/install.md
+    about: See install.md for setup instructions
