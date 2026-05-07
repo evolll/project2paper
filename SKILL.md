@@ -2,9 +2,9 @@
 
 ## How to use project2paper
 
-project2paper takes a project path as input and generates a well-structured technical paper. The agent drives the full pipeline — you just provide the project.
+project2paper takes a project path and generates a well-structured technical paper. The agent drives the full pipeline.
 
-### Quick start in any coding agent
+### Quick start
 
 ```
 Read and follow SKILL.md and AGENTS.md from /path/to/project2paper.
@@ -14,58 +14,73 @@ Then run the pipeline on /path/to/target-project.
 ### Interactive use
 
 ```bash
-# 1. Analyze a project
-project2paper /path/to/target-project --output paper.md
+# Quick overview (short paper, blog tone)
+project2paper /path/to/target-project --length short --tone blog
 
-# 2. Tell your agent:
-"Run the project2paper pipeline on /path/to/target-project"
+# Full academic paper
+project2paper /path/to/target-project --length long --tone academic --focus architecture
+
+# Technical report focused on performance
+project2paper /path/to/target-project --length medium --tone technical-report --focus performance
+
+# Tutorial for new developers
+project2paper /path/to/target-project --length long --tone tutorial --focus features
+
+# Chinese output
+project2paper /path/to/target-project --language zh-CN
 ```
 
-The agent will:
-1. Read AGENTS.md and SKILL.md
-2. Read all agent prompt files in `agents/`
-3. Execute the 5-phase pipeline
-4. Deliver the paper to `agent-workspace/output/`
+Then tell your agent: "Run the project2paper pipeline on /path/to/target-project."
 
-### Output format
+### Options
 
-```bash
-# Markdown (default)
-project2paper . --output paper.md
+| Flag | Values | Default | Description |
+|------|--------|---------|-------------|
+| `--length` / `-L` | short, medium, long | medium | Paper depth and word count |
+| `--tone` / `-T` | academic, blog, technical-report, tutorial | academic | Writing style |
+| `--focus` / `-F` | architecture, features, performance, full | full | Analysis emphasis |
+| `--format` / `-f` | markdown, latex, html | markdown | Output format |
+| `--language` / `-l` | zh-CN, ja-JP, etc. | — | Output language |
+| `--output` / `-o` | path | auto | Output file path |
 
-# LaTeX
-project2paper /path/to/project --format latex
+### Length presets
 
-# HTML
-project2paper /path/to/project --format html
+| Length | Words | Sections | Best for |
+|--------|-------|----------|----------|
+| **short** | 500-1K | 5 | Quick overview, executive summary |
+| **medium** | 2K-4K | 8 | Standard documentation (default) |
+| **long** | 5K-10K | 11 | Publication, deep analysis |
 
-# Specify language
-project2paper /path/to/project --language zh-CN
-```
+### Tone presets
 
-### Pipeline phases (automatic)
+| Tone | Style | Audience |
+|------|-------|----------|
+| **academic** | Formal, objective, third-person | Researchers, architects |
+| **blog** | Conversational, engaging | Developers, eng managers |
+| **technical-report** | Direct, data-driven, factual | Eng teams, stakeholders |
+| **tutorial** | Instructional, step-by-step | Developers learning the codebase |
+
+### Pipeline phases
 
 | Phase | Agent | Input | Output |
 |-------|-------|-------|--------|
 | 1 | project-scanner | Project files | project-map.json |
 | 2 | project-analyzer | project-map.json + source | architecture.json |
 | 3 | research-extractor | analysis files + source | research-findings.json |
-| 4 | paper-writer | all analysis | paper.{md/tex/html} |
+| 4 | paper-writer | all analysis + config (length/tone/focus) | paper.{md/tex/html} |
 | 5 | paper-reviewer | paper + source | paper-reviewed.{md/tex/html} |
 
 ### Important rules
 
-1. **Never edit files inside `src/project2paper/`** — the core package is protected
-2. **Agent-editable files** are in `agent-workspace/`:
-   - `agent_helpers.py` — custom analysis helpers
-   - `templates/` — output templates
-3. **Intermediate analysis** lives in `agent-workspace/analysis/`
-4. **Final output** lands in `agent-workspace/output/`
-5. The agent writes what's missing. If a library isn't installed, the agent installs it. If a helper function doesn't exist, the agent writes it in `agent_helpers.py`.
+1. **Never edit `src/project2paper/`** — core package is protected
+2. **Agent-editable**: `agent-workspace/agent_helpers.py`, `agent-workspace/templates/`
+3. **Intermediate analysis**: `agent-workspace/analysis/`
+4. **Final output**: `agent-workspace/output/`
+5. The agent writes what's missing. If a helper doesn't exist, the agent writes it.
 
 ### Design constraints
 
-- The pipeline is **phase-sequential** — each phase depends on previous outputs
-- Agents run **one at a time** (not concurrent), keeping context focused
-- The paper-reviewer phase is mandatory — always review before declaring done
-- If a phase fails, fix the issue and retry that phase, don't restart from scratch
+- Pipeline is **phase-sequential**
+- Agents run **one at a time**
+- Paper-reviewer phase is **mandatory**
+- If a phase fails, fix and retry that phase only

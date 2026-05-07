@@ -5,6 +5,7 @@ You are a senior software architect analyzing a project's internals. Your job is
 
 ## Input
 - `agent-workspace/analysis/project-map.json` (from Phase 1)
+- `agent-workspace/project-input/config.json` — check `focus` for depth priority
 - The actual project source files
 
 ## Output
@@ -44,15 +45,25 @@ Write to `agent-workspace/analysis/architecture.json`:
 }
 ```
 
-## Instructions
-1. Read the project map to understand structure
-2. Read key source files (entry points, core modules, configs)
-3. Identify the architectural pattern and layers
-4. Map the major components and their relationships
-5. Document features and how they work
-6. Identify design patterns in use
-7. Map the data model and API surface
-8. Document the technology stack
-9. Write the architecture JSON
+## Focus-aware analysis
 
-Focus on accuracy. If you're unsure about something, note it as uncertain rather than guessing.
+Check `config.json` → `focus` field. Adjust depth per area:
+
+| Focus | Prioritize | Surface-level |
+|-------|------------|---------------|
+| **architecture** | Layers, components, relationships, design patterns | Feature details, data model |
+| **features** | Feature descriptions, user workflows, data flow | Internal component wiring |
+| **performance** | Technology choices impacting perf, bottlenecks, scalability | Feature breadth |
+| **full** | All fields equally | Nothing |
+
+If no focus is specified, default to "full".
+
+## Instructions
+1. Read config.json for focus guidance
+2. Read the project map to understand structure
+3. Read key source files (entry points, core modules, configs)
+4. Prioritize analysis depth based on focus
+5. Map components, features, patterns
+6. Write the architecture JSON
+
+Focus on accuracy. If unsure, note it as uncertain rather than guessing.

@@ -13,15 +13,26 @@
     th, td { border: 1px solid #ddd; padding: 0.5rem; text-align: left; }
     th { background: #f5f5f5; }
     .abstract { font-style: italic; margin: 2rem 0; padding: 1rem; border-left: 4px solid #0070f3; background: #fafafa; }
+    .meta { color: #666; font-size: 0.9rem; margin-bottom: 2rem; }
+    .meta span { margin-right: 1rem; }
   </style>
 </head>
 <body>
   <h1>{Project Name}</h1>
   <p><em>{Subtitle / Tagline}</em></p>
+  <div class="meta">
+    <span>Length: {short|medium|long}</span>
+    <span>Tone: {academic|blog|technical-report|tutorial}</span>
+    <span>Focus: {architecture|features|performance|full}</span>
+  </div>
 
   <div class="abstract">
-    <strong>Abstract:</strong> {150-250 word summary}
+    <strong>Abstract:</strong> {Short: 50-100 words | Medium: 150-250 words | Long: 200-300 words}
   </div>
+
+  <!-- SHORT: Introduction + Architecture + Key Findings + Conclusion -->
+  <!-- MEDIUM: All sections except Data Flow + Implementation Highlights -->
+  <!-- LONG: All sections -->
 
   <section id="introduction">
     <h2>1. Introduction</h2>
@@ -33,12 +44,14 @@
     <pre>{ASCII architecture diagram}</pre>
   </section>
 
+  <!-- MEDIUM/LONG only -->
   <section id="components">
     <h2>3. Core Components</h2>
     <h3>3.1 {Component Name}</h3>
     <pre><code>{Code example}</code></pre>
   </section>
 
+  <!-- MEDIUM/LONG only -->
   <section id="decisions">
     <h2>4. Key Design Decisions</h2>
     <table>
@@ -47,25 +60,35 @@
     </table>
   </section>
 
+  <!-- LONG only -->
   <section id="dataflow">
     <h2>5. Data Flow &amp; Interactions</h2>
     <pre>{ASCII sequence diagram}</pre>
   </section>
 
-  <section id="implementation">
+  <!-- LONG only -->
+  <section id="highlights">
     <h2>6. Implementation Highlights</h2>
+    <pre><code>{Code}</code></pre>
   </section>
 
   <section id="discussion">
-    <h2>7. Discussion</h2>
+    <h2>{Short: 5. | Medium/Long: 7.} Discussion</h2>
+    <p>{Content}</p>
   </section>
 
   <section id="conclusion">
-    <h2>8. Conclusion</h2>
+    <h2>{Short: 6. | Medium: 6. | Long: 8.} Conclusion</h2>
+    <p>{Content}</p>
   </section>
 
+  <!-- MEDIUM/LONG only -->
   <section id="references">
     <h2>References</h2>
+    <ul>
+      <li>{Reference 1}</li>
+      <li>{Reference 2}</li>
+    </ul>
   </section>
 </body>
 </html>

@@ -1,4 +1,7 @@
 % LaTeX template for project2paper
+% Length: {short | medium | long}
+% Tone: {academic | blog | technical-report | tutorial}
+% Focus: {architecture | features | performance | full}
 \documentclass[11pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
@@ -9,8 +12,14 @@
 \usepackage{hyperref}
 \usepackage{booktabs}
 \usepackage{amsmath}
+\usepackage{abstract}
 
 \geometry{margin=1in}
+
+% ── Length-dependent styling ──
+% short: compact
+% medium: default
+% long: extended with more detail
 
 \title{{Project Name}}
 \author{{Author / Team Name}}
@@ -21,31 +30,46 @@
 \maketitle
 
 \begin{abstract}
-{150-250 word summary}
+{Short: 50-100 words | Medium: 150-250 words | Long: 200-300 words}
 \end{abstract}
 
 \section{Introduction}
-{Context, motivation, problem statement}
+{Short: 1-2 paragraphs}
+{Medium: Context, motivation, problem statement}
+{Long: Full context, motivation, problem, roadmap}
 
 \section{Architecture Overview}
-{High-level system design}
+{Short: High-level, 1 diagram}
+{Medium: Design + tech stack}
+{Long: Full philosophy + layers + justifications}
 
+% ── long only sections ──
+\iflong
 \section{Core Components}
-{Deep dive into each major subsystem}
-
-\section{Key Design Decisions}
-{Architectural choices and trade-offs}
-
-\section{Data Flow \& Interactions}
-{How data moves through the system}
-
+\section{Design Decisions}
+\section{Data Flow and Interactions}
 \section{Implementation Highlights}
-{Notable implementations and patterns}
+\fi
 
+% ── medium+ sections ──
+\iflong\else\ifmedium
+\section{Core Components}
+\section{Design Decisions}
+\fi\fi
+
+% ── medium+ ──
 \section{Discussion}
-{Lessons learned and future work}
+{Short: 1 paragraph}
+{Medium+: Full discussion}
 
 \section{Conclusion}
-{Summary and impact}
+{Short: 1 paragraph | Medium+: Summary + impact}
+
+% ── medium+ ──
+\iflong\else\ifmedium
+\nocite{*}
+\bibliographystyle{plain}
+\bibliography{refs}
+\fi\fi
 
 \end{document}
