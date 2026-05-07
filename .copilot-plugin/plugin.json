@@ -1,7 +1,0 @@
-{
-  "name": "project2paper",
-  "description": "Turn any codebase into a well-structured technical paper — AI-powered project analysis and paper generation",
-  "version": "0.1.0",
-  "skills": "./agents/",
-  "agents": "./agents/"
-}
