@@ -2,7 +2,7 @@
 
 **Turn any codebase into a well-structured technical paper.**
 
-A Claude Code plugin that analyzes any project and produces a publication-quality paper. 5-phase pipeline: scan → analyze → research → write → review.
+A 5-phase agent pipeline that analyzes any project and produces a publication-quality paper. Works with **Claude Code** (slash command) and **OpenCode** (skill).
 
 ```
 /project2paper /path/to/project --length long --tone academic --format latex
@@ -20,27 +20,32 @@ A Claude Code plugin that analyzes any project and produces a publication-qualit
 
 ## Quick Start
 
-### 1. Clone
+### Claude Code
 
 ```bash
+# 1. Clone (one-time)
 git clone https://github.com/evolll/project2paper.git ~/.claude/plugins/project2paper
-```
 
-Auto-discovered by Claude Code via `.claude-plugin/plugin.json`.
-
-### 2. Run
-
-In Claude Code:
-
-```
+# 2. Run in Claude Code
 /project2paper /path/to/your-project
+
+# 3. With options
+/project2paper /path/to/your-project --length long --tone academic --format latex --language zh-CN
 ```
 
-### 3. Customize
+Auto-discovered via `.claude-plugin/plugin.json`.
 
+### OpenCode
+
+```bash
+# 1. Clone to global skills (one-time)
+git clone https://github.com/evolll/project2paper.git ~/.config/opencode/skills/project2paper
+
+# 2. In OpenCode, tell the agent:
+run the project2paper pipeline on /path/to/project with --length long --tone academic --format latex
 ```
-/project2paper /path/to/your-project --length long --tone academic --focus architecture --format latex --language zh-CN
-```
+
+Auto-discovered via `.opencode/skills/project2paper/SKILL.md`.
 
 ---
 
@@ -120,23 +125,25 @@ In Claude Code:
 
 ```
 project2paper/
-├── .claude-plugin/plugin.json     # Plugin registration
+├── .claude-plugin/plugin.json          # Claude Code plugin registration
+├── .opencode/skills/project2paper/     # OpenCode skill
+│   └── SKILL.md
 ├── skills/
-│   └── project2paper/SKILL.md     # /project2paper command
+│   └── project2paper/SKILL.md          # /project2paper command (Claude)
 ├── agents/
-│   ├── project-scanner.md         # Phase 1
-│   ├── project-analyzer.md        # Phase 2
-│   ├── research-extractor.md      # Phase 3
-│   ├── paper-writer.md            # Phase 4
-│   └── paper-reviewer.md          # Phase 5
-├── agent-workspace/               # Output directory
-│   ├── project-input/             # Config (written by agent)
-│   ├── analysis/                  # Intermediate artifacts
-│   ├── output/                    # Final paper
-│   └── templates/                 # Output templates
-├── CLAUDE.md                      # Auto-read by Claude Code
-├── SKILL.md                       # Usage reference
-└── AGENTS.md                      # Agent architecture guide
+│   ├── project-scanner.md              # Phase 1
+│   ├── project-analyzer.md             # Phase 2
+│   ├── research-extractor.md           # Phase 3
+│   ├── paper-writer.md                 # Phase 4
+│   └── paper-reviewer.md               # Phase 5
+├── agent-workspace/                    # Output directory
+│   ├── project-input/                  # Config (written by agent)
+│   ├── analysis/                       # Intermediate artifacts
+│   ├── output/                         # Final paper
+│   └── templates/                      # Output templates
+├── CLAUDE.md                           # Auto-read by Claude Code
+├── SKILL.md                            # Usage reference
+└── AGENTS.md                           # Agent architecture guide
 ```
 
 ---
