@@ -5,7 +5,5 @@
   "author": { "name": "project2paper" },
   "homepage": "https://github.com/evolll/project2paper",
   "repository": "https://github.com/evolll/project2paper",
-  "license": "MIT",
-  "skills": "./skills/",
-  "agents": "./agents/"
+  "license": "MIT"
 }

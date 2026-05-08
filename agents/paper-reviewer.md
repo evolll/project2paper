@@ -1,3 +1,8 @@
+---
+name: paper-reviewer
+description: Review and refine a generated technical paper for accuracy, tone, length, and focus compliance.
+---
+
 # Agent: paper-reviewer (Phase 5)
 
 ## Role

@@ -1,3 +1,8 @@
+---
+name: project-scanner
+description: Scan a project directory and produce a structured map of files, languages, frameworks, and entry points.
+---
+
 # Agent: project-scanner (Phase 1)
 
 ## Role

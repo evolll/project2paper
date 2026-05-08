@@ -23,17 +23,18 @@ A 5-phase agent pipeline that analyzes any project and produces a publication-qu
 ### Claude Code
 
 ```bash
-# 1. Clone (one-time)
-git clone https://github.com/evolll/project2paper.git ~/.claude/plugins/project2paper
+# 1. Add the marketplace (one-time)
+claude plugins marketplace add https://github.com/evolll/project2paper
 
-# 2. Run in Claude Code
+# 2. Install the plugin
+claude plugins install project2paper
+
+# 3. Run in Claude Code
 /project2paper /path/to/your-project
 
-# 3. With options
+# 4. With options
 /project2paper /path/to/your-project --length long --tone academic --format latex --language zh-CN
 ```
-
-Auto-discovered via `.claude-plugin/plugin.json`.
 
 ### OpenCode
 

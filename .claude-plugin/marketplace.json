@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "evolll-plugins",
+  "description": "Plugins by evolll for Claude Code",
+  "owner": {
+    "name": "evolll"
+  },
+  "plugins": [
+    {
+      "name": "project2paper",
+      "description": "Turn any codebase into a well-structured technical paper. 5-phase pipeline: scan → analyze → research → write → review.",
+      "source": {
+        "source": "github",
+        "repo": "evolll/project2paper"
+      },
+      "homepage": "https://github.com/evolll/project2paper"
+    }
+  ]
+}

@@ -1,3 +1,8 @@
+---
+name: project-analyzer
+description: Analyze a project's architecture, components, design patterns, data model, and technology choices.
+---
+
 # Agent: project-analyzer (Phase 2)
 
 ## Role

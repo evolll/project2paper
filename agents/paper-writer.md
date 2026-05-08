@@ -1,3 +1,8 @@
+---
+name: paper-writer
+description: Synthesize project analysis and research findings into a well-structured technical paper.
+---
+
 # Agent: paper-writer (Phase 4)
 
 ## Role

@@ -1,3 +1,8 @@
+---
+name: research-extractor
+description: Extract novel insights, architectural decisions, trade-offs, and lessons learned from a software project.
+---
+
 # Agent: research-extractor (Phase 3)
 
 ## Role
