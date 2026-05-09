@@ -2,6 +2,17 @@
 
 > {Subtitle / Tagline}
 
+<!-- novelty_highlight: if enabled, markers show existing work vs novel contributions -->
+<!-- @novelty-marker: 🆕 Novel Contribution | ✨ Improved | 📚 Existing | 🔧 Baseline -->
+
+**Novelty Legend**
+- 🆕 **Novel** — Truly new contribution by this project
+- ✨ **Improved** — Adapted/optimized from prior work
+- 📚 **Existing** — Prior work or dependency
+- 🔧 **Baseline** — Common / standard practice
+
+---
+
 **Abstract**
 
 {Short: 50-100 words | Medium: 150-250 words | Long: 200-300 words}

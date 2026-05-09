@@ -2,6 +2,7 @@
 % Length: {short | medium | long}
 % Tone: {academic | blog | technical-report | tutorial}
 % Focus: {architecture | features | performance | full}
+% novelty_highlight: {true | false}
 \documentclass[11pt,a4paper]{article}
 
 \usepackage[utf8]{inputenc}
@@ -13,8 +14,35 @@
 \usepackage{booktabs}
 \usepackage{amsmath}
 \usepackage{abstract}
+\usepackage{xcolor}
+\usepackage{tabularx}
 
 \geometry{margin=1in}
+
+% ── Novelty highlighting ──
+% Enabled via config.json > novelty_highlight
+\newcommand{\novel}[1]{\textbf{\textcolor[RGB]{34,197,94}{🆕 #1}}}
+\newcommand{\existing}[1]{\textbf{\textcolor[RGB]{107,114,128}{📚 #1}}}
+\newcommand{\improved}[1]{\textbf{\textcolor[RGB]{245,158,11}{✨ #1}}}
+\newcommand{\baseline}[1]{\textbf{\textcolor[RGB]{59,130,246}{🔧 #1}}}
+\newcommand{\noveltybadge}[1]{%
+  \ifstrequal{#1}{novel}{\textcolor[RGB]{34,197,94}{\textbf{🆕 Novel}}}{%
+  \ifstrequal{#1}{existing}{\textcolor[RGB]{107,114,128}{\textbf{📚 Existing}}}{%
+  \ifstrequal{#1}{improved}{\textcolor[RGB]{245,158,11}{\textbf{✨ Improved}}}{%
+  \ifstrequal{#1}{baseline}{\textcolor[RGB]{59,130,246}{\textbf{🔧 Baseline}}}{}}}}%
+}
+
+% ── Novelty legend table ──
+\newcommand{\noveltylegend}{%
+  \section*{Novelty Legend}
+  \begin{tabularx}{\textwidth}{lX}
+    \textcolor[RGB]{34,197,94}{🆕 Novel}   & Truly new contribution by this project \\
+    \textcolor[RGB]{245,158,11}{✨ Improved} & Adapted/optimized from prior work \\
+    \textcolor[RGB]{107,114,128}{📚 Existing} & Prior work or dependency \\
+    \textcolor[RGB]{59,130,246}{🔧 Baseline} & Common / standard practice \\
+  \end{tabularx}
+  \vspace{1em}
+}
 
 % ── Length-dependent styling ──
 % short: compact

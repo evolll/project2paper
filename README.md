@@ -5,7 +5,7 @@
 A 5-phase agent pipeline that analyzes any project and produces a publication-quality paper. Works with **Claude Code** (slash command) and **OpenCode** (skill).
 
 ```
-/project2paper /path/to/project --length long --tone academic --format latex
+/project2paper /path/to/project --length long --format latex --interactive --novelty
 
   ● Phase 1: project-scanner   → project structure mapped
   ● Phase 2: project-analyzer  → architecture analyzed
@@ -33,7 +33,7 @@ claude plugins install project2paper
 /project2paper /path/to/your-project
 
 # 4. With options
-/project2paper /path/to/your-project --length long --tone academic --format latex --language zh-CN
+/project2paper /path/to/your-project --length long --format latex --interactive --novelty
 ```
 
 ### OpenCode
@@ -43,7 +43,7 @@ claude plugins install project2paper
 git clone https://github.com/evolll/project2paper.git ~/.config/opencode/skills/project2paper
 
 # 2. In OpenCode, tell the agent:
-run the project2paper pipeline on /path/to/project with --length long --tone academic --format latex
+run the project2paper pipeline on /path/to/project with --length long --format latex --interactive --novelty
 ```
 
 Auto-discovered via `.opencode/skills/project2paper/SKILL.md`.
@@ -55,10 +55,10 @@ Auto-discovered via `.opencode/skills/project2paper/SKILL.md`.
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
 | `--length` | short, medium, long | medium | short (500-1K words), medium (2K-4K), long (5K-10K) |
-| `--tone` | academic, blog, technical-report, tutorial | academic | Writing style and voice |
 | `--focus` | architecture, features, performance, full | full | What to emphasize |
 | `--format` | markdown, latex, html | latex | Output format |
-| `--language` | zh-CN, ja-JP, etc. | en | Output language |
+| `--interactive` | flag | false | Phase-by-phase user interaction for feedback and verification |
+| `--novelty` | flag | false | Highlight existing work vs novel contributions with inline markers |
 
 ### Length
 
@@ -68,56 +68,56 @@ Auto-discovered via `.opencode/skills/project2paper/SKILL.md`.
 | medium | 2K-4K | 8 | Standard documentation |
 | long | 5K-10K | 11 | Publication, deep analysis |
 
-### Tone
+### Style
 
-| Tone | Style | Audience |
-|------|-------|----------|
-| academic | Formal, third-person | Researchers, architects |
-| blog | Conversational, engaging | Developers |
-| technical-report | Data-driven, factual | Stakeholders |
-| tutorial | Step-by-step, pedagogical | Learners |
+The paper is written in **academic** style (formal, third-person, problem-to-solution flow) by default.
 
 ---
 
 ## How it works
 
 ```
-/project2paper /my-project --length long --tone academic
+/project2paper /my-project --length long --interactive --novelty
 
-  ┌─ Phase 1 ──────────────────────────────┐
-  │  agent/project-scanner.md              │
-  │  → walks directory, catalogs files     │
-  │  → detects language, framework, deps   │
-  │  → writes project-map.json             │
-  └────────────────────────────────────────┘
+  ┌─ Phase 1 ──────────────────────────────────┐
+  │  agent/project-scanner.md                  │
+  │  → walks directory, catalogs files         │
+  │  → detects language, framework, deps       │
+  │  → [interactive] asks novelty mode+ hints  │
+  │  → writes project-map.json                 │
+  └────────────────────────────────────────────┘
                      ↓
-  ┌─ Phase 2 ──────────────────────────────┐
-  │  agent/project-analyzer.md             │
-  │  → reads key source files              │
-  │  → maps architecture, layers, flows    │
-  │  → writes architecture.json            │
-  └────────────────────────────────────────┘
+  ┌─ Phase 2 ──────────────────────────────────┐
+  │  agent/research-extractor.md               │
+  │  → searches for base models & dependencies │
+  │  → identifies existing patterns & patterns │
+  │  → flags potential novelty zones           │
+  │  → writes research-findings.json           │
+  └────────────────────────────────────────────┘
                      ↓
-  ┌─ Phase 3 ──────────────────────────────┐
-  │  agent/research-extractor.md           │
-  │  → identifies novel insights           │
-  │  → extracts decisions, trade-offs      │
-  │  → writes research-findings.json       │
-  └────────────────────────────────────────┘
+  ┌─ Phase 3 ──────────────────────────────────┐
+  │  agent/project-analyzer.md                 │
+  │  → analyzes architecture using Phase 2 ctx │
+  │  → classifies each component: novel/existing│
+  │  → generates analysis-outline.md           │
+  │  → [interactive] user reviews outline loop │
+  │  → writes architecture.json + outline      │
+  └────────────────────────────────────────────┘
                      ↓
-  ┌─ Phase 4 ──────────────────────────────┐
-  │  agent/paper-writer.md                 │
-  │  → uses length/tone/focus from config  │
-  │  → generates paper in specified format │
-  │  → writes output/paper.tex             │
-  └────────────────────────────────────────┘
+  ┌─ Phase 4 ──────────────────────────────────┐
+  │  agent/paper-writer.md                     │
+  │  → uses length/tone/focus/novelty/outline  │
+  │  → generates paper with novelty markers    │
+  │  → writes output/paper.{md|tex|html}       │
+  └────────────────────────────────────────────┘
                      ↓
-  ┌─ Phase 5 ──────────────────────────────┐
-  │  agent/paper-reviewer.md               │
-  │  → verifies claims against source      │
-  │  → checks length/tone/focus compliance │
-  │  → writes output/paper-reviewed.tex    │
-  └────────────────────────────────────────┘
+  ┌─ Phase 5 ──────────────────────────────────┐
+  │  agent/paper-reviewer.md                   │
+  │  → verifies claims against source          │
+  │  → checks length/tone/focus/novelty        │
+  │  → validates novelty markers accuracy      │
+  │  → writes output/paper-reviewed.{ext}      │
+  └────────────────────────────────────────────┘
 ```
 
 ---
@@ -132,11 +132,11 @@ project2paper/
 ├── skills/
 │   └── project2paper/SKILL.md          # /project2paper command (Claude)
 ├── agents/
-│   ├── project-scanner.md              # Phase 1
-│   ├── project-analyzer.md             # Phase 2
-│   ├── research-extractor.md           # Phase 3
-│   ├── paper-writer.md                 # Phase 4
-│   └── paper-reviewer.md               # Phase 5
+│   ├── project-scanner.md              # Phase 1: project scan
+│   ├── research-extractor.md           # Phase 2: literature search & base model discovery
+│   ├── project-analyzer.md             # Phase 3: novelty analysis + outline + user review
+│   ├── paper-writer.md                 # Phase 4: paper writing
+│   └── paper-reviewer.md               # Phase 5: review and refine
 ├── agent-workspace/                    # Output directory
 │   ├── project-input/                  # Config (written by agent)
 │   ├── analysis/                       # Intermediate artifacts

@@ -1,19 +1,18 @@
 ---
-name: project2paper
+name: /project2paper
 description: Analyze any codebase and generate a publication-quality technical paper
-argument-hint: ["<path> [--length short|medium|long] [--tone academic|blog|technical-report|tutorial] [--focus architecture|features|performance|full] [--format markdown|latex|html] [--language en|zh-CN|ja-JP|...]"]
+argument-hint: ["<path> [--length short|medium|long] [--focus architecture|features|performance|full] [--format markdown|latex|html] [--interactive] [--novelty]"]
 ---
 
 # /project2paper
 
-Analyze a codebase and produce a well-structured technical paper. A 5-phase agent pipeline scans the project, analyzes architecture, extracts insights, writes the paper, and reviews it.
+Analyze a codebase and produce a well-structured technical paper. A 5-phase agent pipeline scans the project, discovers base models, analyzes novelty, generates an analysis outline, writes the paper, and reviews it.
 
 ## Usage
 
 ```
 /project2paper /path/to/project
-/project2paper /path/to/project --length long --tone academic --focus architecture --format latex
-/project2paper /path/to/project --length short --tone blog --language zh-CN
+/project2paper /path/to/project --length long --focus architecture --format latex --interactive --novelty
 ```
 
 ## Arguments
@@ -22,14 +21,16 @@ Analyze a codebase and produce a well-structured technical paper. A 5-phase agen
 |----------|---------|-------------|
 | `<path>` | — | Path to the project (required) |
 | `--length` | medium | short (500-1K words), medium (2K-4K), long (5K-10K) |
-| `--tone` | academic | academic, blog, technical-report, tutorial |
 | `--focus` | full | architecture, features, performance, full |
 | `--format` | latex | markdown, latex, html |
-| `--language` | en | Output language (zh-CN, ja-JP, ko-KR, etc.) |
+| `--interactive` | false | Enable phase-by-phase user interaction for feedback and verification |
+| `--novelty` | false | Highlight existing work vs novel contributions with inline markers |
 
 ## Pipeline
 
 The command executes 5 phases sequentially. Each phase reads its agent prompt, processes the project, and saves output to `agent-workspace/`. The agent drives execution — read the SKILL.md in each phase's agent prompt for detailed instructions.
+
+The paper is written in academic style (formal, third-person) by default.
 
 ---
 
@@ -43,38 +44,37 @@ The command executes 5 phases sequentially. Each phase reads its agent prompt, p
 4. Detect primary language and framework
 5. Identify entry points, test files, config files
 6. Count files and lines of code per language
-7. Write `agent-workspace/analysis/project-map.json`
+7. If `--interactive` and `--novelty`: ask user to choose novelty identification mode (manual vs auto)
+8. Write `agent-workspace/analysis/project-map.json`
 
-**Before starting Phase 1: write `agent-workspace/project-input/config.json`** with the user's settings (extract `--length`, `--tone`, `--focus`, `--format`, `--language` from arguments; use defaults for missing ones).
+**Before starting Phase 1: write `agent-workspace/project-input/config.json`** with the user's settings (extract `--length`, `--focus`, `--format`, `--interactive`, `--novelty` from arguments; use defaults for missing ones).
 
 ---
 
-## Phase 2 — Architecture Analysis
+## Phase 2 — Literature Search & Base Model Discovery
 
-**Agent prompt:** `agents/project-analyzer.md`
+**Agent prompt:** `agents/research-extractor.md`
 
 1. Read the project map from Phase 1
-2. Read key source files (entry points, core modules, configs)
-3. Identify architectural pattern, layers, components, relationships
-4. Map features, design patterns, data model, API surface
-5. Document technology stack
-6. Write `agent-workspace/analysis/architecture.json`
+2. Analyze dependencies, identify base models and existing patterns
+3. Flag potential novelty zones for Phase 3 analysis
+4. If `--interactive`: present findings and ask for additional related work
+5. Write `agent-workspace/analysis/research-findings.json`
 
 Prioritize depth based on the `focus` setting from config.
 
 ---
 
-## Phase 3 — Research Extraction
+## Phase 3 — Novelty Analysis & Outline Generation
 
-**Agent prompt:** `agents/research-extractor.md`
+**Agent prompt:** `agents/project-analyzer.md`
 
-1. Read the architecture analysis and key source files
-2. Identify novel contributions, key decisions, trade-offs
-3. Extract lessons learned, pain points, quantifiable metrics
-4. Identify target audience
-5. Write `agent-workspace/analysis/research-findings.json`
-
-Prioritize based on `focus` setting.
+1. Read the project map and research findings
+2. Analyze architecture using Phase 2 context (base models, patterns)
+3. Classify each component as novel/improved/existing/baseline with rationale
+4. Generate `agent-workspace/analysis/architecture.json`
+5. Generate analysis outline at `agent-workspace/analysis/analysis-outline.md`
+6. If `--interactive`: present outline to user, loop for modifications until confirmed
 
 ---
 
@@ -83,9 +83,10 @@ Prioritize based on `focus` setting.
 **Agent prompt:** `agents/paper-writer.md`
 
 1. Read all analysis files and config
-2. Write the paper at the depth specified by `length`, in the tone specified by `tone`, emphasizing the `focus` area
-3. Output format specified by `format`, language specified by `language`
-4. Write to `agent-workspace/output/paper.{md|tex|html}`
+2. Write the paper at the depth specified by `length`, in academic tone, emphasizing the `focus` area
+3. If `--novelty`: include novelty markers inline
+4. Output format specified by `format`
+5. Write to `agent-workspace/output/paper.{md|tex|html}`
 
 ---
 
@@ -95,9 +96,10 @@ Prioritize based on `focus` setting.
 
 1. Read the generated paper and config
 2. Verify claims against source code
-3. Check length/tone/focus compliance
-4. Fix issues directly
-5. Write final version to `agent-workspace/output/paper-reviewed.{md|tex|html}`
+3. Check length/focus compliance
+4. If `--novelty`: validate novelty marker accuracy
+5. Fix issues directly
+6. Write final version to `agent-workspace/output/paper-reviewed.{md|tex|html}`
 
 ---
 

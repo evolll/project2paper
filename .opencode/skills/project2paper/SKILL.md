@@ -1,6 +1,6 @@
 ---
 name: project2paper
-description: Analyze any codebase and generate a publication-quality technical paper. 5-phase pipeline: project-scanner → project-analyzer → research-extractor → paper-writer → paper-reviewer
+description: Analyze any codebase and generate a publication-quality technical paper. 5-phase pipeline: project-scanner → research-extractor → project-analyzer → paper-writer → paper-reviewer
 license: MIT
 compatibility: opencode
 metadata:
@@ -17,7 +17,7 @@ Turn any codebase into a well-structured technical paper.
 Tell me the project path and your preferences, and I'll run the 5-phase pipeline:
 
 ```
-project2paper /path/to/project --length long --tone academic --focus architecture --format latex
+project2paper /path/to/project --length long --focus architecture --format latex --interactive --novelty
 ```
 
 ## Configuration options
@@ -25,10 +25,10 @@ project2paper /path/to/project --length long --tone academic --focus architectur
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
 | `--length` | short, medium, long | medium | Paper depth |
-| `--tone` | academic, blog, technical-report, tutorial | academic | Writing style |
 | `--focus` | architecture, features, performance, full | full | Analysis emphasis |
 | `--format` | markdown, latex, html | latex | Output format |
-| `--language` | zh-CN, ja-JP, etc. | en | Output language |
+| `--interactive` | flag | false | Enable phase-by-phase user interaction for feedback and verification |
+| `--novelty` | flag | false | Highlight existing work vs novel contributions with inline markers |
 
 ## Pipeline
 
@@ -38,21 +38,41 @@ Before starting Phase 1, write `agent-workspace/project-input/config.json` with 
 
 Read `agents/project-scanner.md`. Walk the project directory, catalog files, detect language/framework, write `agent-workspace/analysis/project-map.json`.
 
-### Phase 2 — project-analyzer
+### Phase 2 — research-extractor (literature search)
 
-Read `agents/project-analyzer.md`. Analyze architecture, identify layers/components/patterns, write `agent-workspace/analysis/architecture.json`.
+Read `agents/research-extractor.md`. Search for base models, dependencies, existing patterns, and flag potential novelty zones. Write `agent-workspace/analysis/research-findings.json`.
 
-### Phase 3 — research-extractor
+### Phase 3 — project-analyzer (novelty analysis + outline)
 
-Read `agents/research-extractor.md`. Extract novel insights, key decisions, lessons learned, write `agent-workspace/analysis/research-findings.json`.
+Read `agents/project-analyzer.md`. Analyze architecture using Phase 2 context, classify novelty per component, generate analysis outline, enter user review loop if interactive. Write `agent-workspace/analysis/architecture.json` and `agent-workspace/analysis/analysis-outline.md`.
 
 ### Phase 4 — paper-writer
 
-Read `agents/paper-writer.md`. Generate the paper at the specified length/tone/focus/format/language, write `agent-workspace/output/paper.{md|tex|html}`.
+Read `agents/paper-writer.md`. Generate the paper in academic style at the specified length/focus/format, write `agent-workspace/output/paper.{md|tex|html}`.
 
 ### Phase 5 — paper-reviewer
 
 Read `agents/paper-reviewer.md`. Review and refine the paper, write `agent-workspace/output/paper-reviewed.{md|tex|html}`.
+
+## Interactive mode
+
+When `--interactive` is used:
+- Before Phase 1, ask the user about their project's novelty mode (manual input vs AI auto-detect)
+- After Phase 1, show project summary and confirm
+- After Phase 2, show research findings and ask for additional related work
+- After Phase 3, present analysis outline for user review and modification (loop until confirmed)
+- After Phase 4, show draft and ask for adjustments
+- After Phase 5, confirm final output
+
+## Novelty highlighting
+
+When `--novelty` is used, each component, feature, and design decision is classified and marked as:
+- 🆕 Novel Contribution — new approach/algorithm/design
+- ✨ Improved — adapted/optimized from prior work
+- 📚 Existing — prior work or dependency
+- 🔧 Baseline — common practice
+
+A legend and summary table are included in the output.
 
 ## Output
 
