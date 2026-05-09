@@ -1,5 +1,5 @@
 ---
-name: /project2paper
+name: project2paper
 description: Analyze any codebase and generate a publication-quality technical paper
 argument-hint: ["<path> [--length short|medium|long] [--focus architecture|features|performance|full] [--format markdown|latex|html] [--interactive] [--novelty]"]
 ---
@@ -23,8 +23,8 @@ Analyze a codebase and produce a well-structured technical paper. A 5-phase agen
 | `--length` | medium | short (500-1K words), medium (2K-4K), long (5K-10K) |
 | `--focus` | full | architecture, features, performance, full |
 | `--format` | latex | markdown, latex, html |
-| `--interactive` | false | Enable phase-by-phase user interaction for feedback and verification |
-| `--novelty` | false | Highlight existing work vs novel contributions with inline markers |
+| `--interactive` | true | Enable phase-by-phase user interaction for feedback and verification |
+| `--novelty` | true | Highlight existing work vs novel contributions with inline markers |
 
 ## Pipeline
 

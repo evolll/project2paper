@@ -254,8 +254,8 @@ def get_interactive_prompt(phase_key: str, **kwargs) -> str:
 # ─── Config Helpers ────────────────────────────────────────────────────
 
 DEFAULT_CONFIG = {
-    "interactive": False,
-    "novelty_highlight": False,
+    "interactive": True,
+    "novelty_highlight": True,
     "novelty_mode": "auto",
     "novelty_in_title": True,
     "novelty_in_toc": True,
