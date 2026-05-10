@@ -55,7 +55,7 @@ Auto-discovered via `.opencode/skills/project2paper/SKILL.md`.
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
 | `--length` | short, medium, long | medium | short (500-1K words), medium (2K-4K), long (5K-10K) |
-| `--focus` | architecture, features, performance, full | full | What to emphasize |
+| `--base` | path | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--format` | markdown, latex, html | latex | Output format |
 | `--interactive` | flag | false | Phase-by-phase user interaction for feedback and verification |
 | `--novelty` | flag | false | Highlight existing work vs novel contributions with inline markers |
@@ -106,7 +106,7 @@ The paper is written in **academic** style (formal, third-person, problem-to-sol
                      ↓
   ┌─ Phase 4 ──────────────────────────────────┐
   │  agent/paper-writer.md                     │
-  │  → uses length/tone/focus/novelty/outline  │
+  │  → uses length/tone/base/novelty/outline   │
   │  → generates paper with novelty markers    │
   │  → writes output/paper.{md|tex|html}       │
   └────────────────────────────────────────────┘
@@ -114,7 +114,7 @@ The paper is written in **academic** style (formal, third-person, problem-to-sol
   ┌─ Phase 5 ──────────────────────────────────┐
   │  agent/paper-reviewer.md                   │
   │  → verifies claims against source          │
-  │  → checks length/tone/focus/novelty        │
+  │  → checks length/tone/base/novelty         │
   │  → validates novelty markers accuracy      │
   │  → writes output/paper-reviewed.{ext}      │
   └────────────────────────────────────────────┘

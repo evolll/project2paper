@@ -1,7 +1,7 @@
 ---
 name: project2paper
 description: Analyze any codebase and generate a publication-quality technical paper
-argument-hint: ["<path> [--length short|medium|long] [--focus architecture|features|performance|full] [--format markdown|latex|html] [--interactive] [--novelty]"]
+argument-hint: ["<path> [--base /path/to/base-project] [--length short|medium|long] [--format markdown|latex|html] [--interactive] [--novelty]"]
 ---
 
 # /project2paper
@@ -12,7 +12,7 @@ Analyze a codebase and produce a well-structured technical paper. A 5-phase agen
 
 ```
 /project2paper /path/to/project
-/project2paper /path/to/project --length long --focus architecture --format latex --interactive --novelty
+/project2paper /path/to/project --base /path/to/base-project --length long --format latex --interactive --novelty
 ```
 
 ## Arguments
@@ -20,8 +20,8 @@ Analyze a codebase and produce a well-structured technical paper. A 5-phase agen
 | Argument | Default | Description |
 |----------|---------|-------------|
 | `<path>` | — | Path to the project (required) |
+| `--base` | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--length` | medium | short (500-1K words), medium (2K-4K), long (5K-10K) |
-| `--focus` | full | architecture, features, performance, full |
 | `--format` | latex | markdown, latex, html |
 | `--interactive` | true | Enable phase-by-phase user interaction for feedback and verification |
 | `--novelty` | true | Highlight existing work vs novel contributions with inline markers |
@@ -40,14 +40,16 @@ The paper is written in academic style (formal, third-person) by default.
 
 1. Read the project path from `$ARGUMENTS`
 2. Resolve it to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
-3. Walk the directory tree, catalog every file (exclude `node_modules/`, `__pycache__/`, `.git/`, `dist/`, `build/`)
-4. Detect primary language and framework
-5. Identify entry points, test files, config files
-6. Count files and lines of code per language
-7. If `--interactive` and `--novelty`: ask user to choose novelty identification mode (manual vs auto)
-8. Write `agent-workspace/analysis/project-map.json`
+3. If `--base` is provided, resolve it to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
+4. Walk the directory tree, catalog every file (exclude `node_modules/`, `__pycache__/`, `.git/`, `dist/`, `build/`)
+5. Detect primary language and framework
+6. Identify entry points, test files, config files
+7. Count files and lines of code per language
+8. If `--base` is provided, scan the base project and compare it with the target project. List differences in structure, new files, modified files, and new dependencies. Present the differences as an outline and ask the user which parts should be treated as paper contributions (novelty points).
+9. If `--interactive` and `--novelty`: ask user to choose novelty identification mode (manual vs auto)
+10. Write `agent-workspace/analysis/project-map.json`
 
-**Before starting Phase 1: write `agent-workspace/project-input/config.json`** with the user's settings (extract `--length`, `--focus`, `--format`, `--interactive`, `--novelty` from arguments; use defaults for missing ones).
+**Before starting Phase 1: write `agent-workspace/project-input/config.json`** with the user's settings (extract `--length`, `--base`, `--format`, `--interactive`, `--novelty` from arguments; use defaults for missing ones). Store `base_path` if `--base` is provided.
 
 ---
 
@@ -61,7 +63,7 @@ The paper is written in academic style (formal, third-person) by default.
 4. If `--interactive`: present findings and ask for additional related work
 5. Write `agent-workspace/analysis/research-findings.json`
 
-Prioritize depth based on the `focus` setting from config.
+Cover all areas equally (architecture, features, performance).
 
 ---
 
@@ -83,7 +85,7 @@ Prioritize depth based on the `focus` setting from config.
 **Agent prompt:** `agents/paper-writer.md`
 
 1. Read all analysis files and config
-2. Write the paper at the depth specified by `length`, in academic tone, emphasizing the `focus` area
+2. Write the paper at the depth specified by `length`, in academic tone. Cover architecture, features, and performance evenly unless `base` comparison highlights specific contribution areas.
 3. If `--novelty`: include novelty markers inline
 4. Output format specified by `format`
 5. Write to `agent-workspace/output/paper.{md|tex|html}`
@@ -96,7 +98,7 @@ Prioritize depth based on the `focus` setting from config.
 
 1. Read the generated paper and config
 2. Verify claims against source code
-3. Check length/focus compliance
+3. Check length compliance
 4. If `--novelty`: validate novelty marker accuracy
 5. Fix issues directly
 6. Write final version to `agent-workspace/output/paper-reviewed.{md|tex|html}`

@@ -17,7 +17,7 @@ Turn any codebase into a well-structured technical paper.
 Tell me the project path and your preferences, and I'll run the 5-phase pipeline:
 
 ```
-project2paper /path/to/project --length long --focus architecture --format latex --interactive --novelty
+project2paper /path/to/project --base /path/to/base-project --length long --format latex --interactive --novelty
 ```
 
 ## Configuration options
@@ -25,7 +25,7 @@ project2paper /path/to/project --length long --focus architecture --format latex
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
 | `--length` | short, medium, long | medium | Paper depth |
-| `--focus` | architecture, features, performance, full | full | Analysis emphasis |
+| `--base` | path | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--format` | markdown, latex, html | latex | Output format |
 | `--interactive` | flag | false | Enable phase-by-phase user interaction for feedback and verification |
 | `--novelty` | flag | false | Highlight existing work vs novel contributions with inline markers |
@@ -48,7 +48,7 @@ Read `agents/project-analyzer.md`. Analyze architecture using Phase 2 context, c
 
 ### Phase 4 — paper-writer
 
-Read `agents/paper-writer.md`. Generate the paper in academic style at the specified length/focus/format, write `agent-workspace/output/paper.{md|tex|html}`.
+Read `agents/paper-writer.md`. Generate the paper in academic style at the specified length/format. If `--base` is provided, emphasize the selected contribution areas, write `agent-workspace/output/paper.{md|tex|html}`.
 
 ### Phase 5 — paper-reviewer
 

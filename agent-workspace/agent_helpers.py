@@ -168,6 +168,13 @@ INTERACTIVE_PROMPTS = {
         "I'll guide you through 5 phases to generate a technical paper from your project.\n"
         "You'll have the chance to review and provide feedback at each step.\n\n"
     ),
+    "base_comparison_review": (
+        "### Base Project Comparison\n\n"
+        "I compared the target project with the base project. Here are the differences:\n\n"
+        "{comparison}\n\n"
+        "Please select which areas should be treated as paper contributions (novelty points).\n"
+        "Reply with the numbers (e.g., 1, 3, 5) or type **all** to select everything."
+    ),
     "ask_novelty_mode": (
         "**How would you like to identify the novelty points of your project?**\n\n"
         "1. **I'll tell you** — You describe what's novel and what's existing work\n"

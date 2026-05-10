@@ -12,7 +12,7 @@ You are a technical paper writer. Your job is to synthesize all analysis and res
 - `agent-workspace/analysis/project-map.json`
 - `agent-workspace/analysis/architecture.json`
 - `agent-workspace/analysis/research-findings.json`
-- `agent-workspace/project-input/config.json` — `length`, `focus`, `output_format`, `novelty_highlight`
+- `agent-workspace/project-input/config.json` — `length`, `output_format`, `novelty_highlight`, `base_path`
 - `agent-workspace/agent_helpers.py` — use `render_novelty_marker()` for novelty badges
 
 ## Output
@@ -58,14 +58,12 @@ Write paper to `agent-workspace/output/paper.{md|tex|html}` based on configured 
 12. **References**
 - Deep code analysis, multiple diagrams, detailed comparisons.
 
-## Focus area
+## Base comparison coverage (config.base_path is set)
 
-| Focus | Emphasize | De-emphasize |
-|-------|-----------|--------------|
-| **architecture** | System design, layers, components, relationships | Feature details |
-| **features** | What the project does, user-facing capabilities | Internal plumbing |
-| **performance** | Benchmarks, optimizations, scalability | Feature breadth |
-| **full** | Balanced coverage | Nothing |
+If a base comparison exists in `project-map.json`:
+- Emphasize the `base_comparison.user_selected_contributions` areas as primary paper contributions
+- Reference the base project briefly as prior work or baseline
+- Structure the paper around the delta: what was added or changed compared to the base
 
 ## Novelty highlighting (config.novelty_highlight == true)
 For every section, component, and claim:
@@ -85,7 +83,7 @@ Format-specific rendering:
 ## Writing Guidelines
 - Use **academic** tone: formal, objective, third-person. Follow Problem → Method → Results → Discussion flow.
 - Adjust depth to the specified length
-- Emphasize the specified focus area
+- If a base comparison exists, structure sections around the selected contribution areas
 - Include code examples in medium/long papers
 - Use ASCII diagrams for architecture and data flow
 - Quantify claims where possible

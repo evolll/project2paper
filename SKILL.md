@@ -11,13 +11,13 @@ project2paper is a Claude Code plugin with a single slash command:
 ## Options
 
 ```
-/project2paper /path/to/project --length long --focus architecture --format latex --interactive --novelty
+/project2paper /path/to/project --base /path/to/base-project --length long --format latex --interactive --novelty
 ```
 
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
 | `--length` | short, medium, long | medium | Paper depth |
-| `--focus` | architecture, features, performance, full | full | Analysis emphasis |
+| `--base` | path | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--format` | markdown, latex, html | latex | Output format |
 | `--interactive` | flag | false | Enable phase-by-phase interaction with user feedback |
 | `--novelty` | flag | false | Highlight existing work vs novel contributions in the paper |
@@ -28,7 +28,7 @@ Before starting Phase 1, write `agent-workspace/project-input/config.json` with 
 
 ### Phase 1 — project-scanner
 
-Read `agents/project-scanner.md`. Walk the project directory, catalog files, detect language/framework, write `agent-workspace/analysis/project-map.json`.
+Read `agents/project-scanner.md`. Walk the project directory, catalog files, detect language/framework. If `--base` is provided, compare with the base project, list differences, and ask the user which parts to treat as contributions. Write `agent-workspace/analysis/project-map.json`.
 
 ### Phase 2 — research-extractor (literature search)
 
@@ -40,7 +40,7 @@ Read `agents/project-analyzer.md`. Analyze architecture using Phase 2 context, c
 
 ### Phase 4 — paper-writer
 
-Read `agents/paper-writer.md`. Generate the paper in academic style at the specified length/focus/format, write `agent-workspace/output/paper.{md|tex|html}`.
+Read `agents/paper-writer.md`. Generate the paper in academic style at the specified length/format. If `--base` is provided, emphasize the selected contribution areas. Write `agent-workspace/output/paper.{md|tex|html}`.
 
 ### Phase 5 — paper-reviewer
 
@@ -50,7 +50,7 @@ Read `agents/paper-reviewer.md`. Review and refine the paper, write `agent-works
 
 When `--interactive` is used, the agent pauses after each phase to present findings and ask for user feedback before proceeding:
 - Before Phase 1, ask the user about their project's novelty mode (manual input vs AI auto-detect)
-- After Phase 1, show project summary and confirm
+- After Phase 1, show project summary and confirm. If `--base` was used, also show the comparison and ask which areas are contributions.
 - After Phase 2, show research findings and ask for additional related work
 - After Phase 3, present analysis outline for user review and modification (loop until confirmed)
 - After Phase 4, show draft and ask for adjustments

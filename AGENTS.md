@@ -5,7 +5,7 @@ project2paper is a Claude Code plugin that generates a technical paper from any 
 ## When the user runs `/project2paper`
 
 1. Read `skills/project2paper/SKILL.md` — it defines the full flow
-2. Parse arguments: project path, `--length`, `--focus`, `--format`, `--interactive`, `--novelty`
+2. Parse arguments: project path, `--length`, `--base`, `--format`, `--interactive`, `--novelty`
 3. Write `agent-workspace/project-input/config.json` with parsed settings (set `interactive: true` if `--interactive` flag, `novelty_highlight: true` if `--novelty` flag)
 4. Execute Phase 1–5 by reading each agent prompt in sequence
 5. In interactive mode, use `agent-workspace/agent_helpers.py` helper functions for user prompts and novelty rendering
@@ -35,6 +35,6 @@ project2paper is a Claude Code plugin that generates a technical paper from any 
 1. Read `skills/project2paper/SKILL.md` first — follow its flow
 2. Parse user arguments, write config.json
 3. For each phase, read the corresponding agent prompt and execute
-4. Use academic tone by default. Adjust depth based on `length`, emphasis based on `focus`
+4. Use academic tone by default. Adjust depth based on `length`. If `--base` is provided, emphasize the selected contribution areas
 5. Save outputs to the correct paths
 6. Present the final output path to the user

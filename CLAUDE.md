@@ -18,7 +18,7 @@ Then in Claude Code, run:
 With options:
 
 ```
-/project2paper /path/to/your-project --length long --focus architecture --format latex --interactive --novelty
+/project2paper /path/to/your-project --base /path/to/base-project --length long --format latex --interactive --novelty
 ```
 
 New features:

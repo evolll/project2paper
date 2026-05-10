@@ -15,7 +15,7 @@ You are a senior software architect and novelty analyst. Your job:
 ## Input
 - `agent-workspace/analysis/project-map.json` (from Phase 1)
 - `agent-workspace/analysis/research-findings.json` (from Phase 2) — base models, existing patterns, potential novelty zones
-- `agent-workspace/project-input/config.json` — check `focus`, `novelty_highlight`, `novelty_mode`
+- `agent-workspace/project-input/config.json` — check `novelty_highlight`, `novelty_mode`, `base_path`
 - The actual project source files
 
 ## Output
@@ -152,10 +152,10 @@ Use `agent_helpers.build_analysis_outline()` to format the outline.
 - Proceed to Phase 4 (paper-writer)
 
 ## Instructions
-1. Read config.json for focus, novelty_highlight, novelty_mode
+1. Read config.json for novelty_highlight, novelty_mode, base_path
 2. Read research-findings.json — understand what's existing/base work
 3. Read project-map.json for structure context
-4. Read key source files — focus on potential_novelty_zones from Phase 2
+4. Read key source files — focus on potential_novelty_zones from Phase 2, and `base_comparison.user_selected_contributions` if base comparison exists
 5. Analyze architecture: map layers, components, features, patterns
 6. Classify novelty: use research findings + novelty_mode to classify each component
 7. Calculate novelty_breakdown with statistics

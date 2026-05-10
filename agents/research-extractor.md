@@ -14,7 +14,7 @@ You are a literature search specialist and base model finder. Your job is to ana
 
 ## Input
 - `agent-workspace/analysis/project-map.json` (from Phase 1)
-- `agent-workspace/project-input/config.json` — check `focus`, `novelty_highlight`, `novelty_mode`
+- `agent-workspace/project-input/config.json` — check `novelty_highlight`, `novelty_mode`, `base_path`
 - The actual project source files
 
 ## Output
@@ -91,19 +91,16 @@ Write to `agent-workspace/analysis/research-findings.json`:
 - These zones will be analyzed for novelty in Phase 3
 - Do NOT classify as novel/existing here — just flag for Phase 3
 
-## Focus-aware search
+## Base-aware search
 
-Check `config.json` → `focus`:
-
-| Focus | Prioritize | Surface-level |
-|-------|------------|---------------|
-| **architecture** | Patterns, architectural decisions, layering | Feature dependencies |
-| **features** | Feature dependencies, API integrations | Internal patterns |
-| **performance** | Performance-critical deps, algorithm choices | Feature breadth |
-| **full** | All areas equally | Nothing |
+If `config.json` → `base_path` is set:
+- Read `agent-workspace/analysis/project-map.json` → `base_comparison`
+- Treat `base_comparison.new_dependencies` as likely existing work (the base already used them)
+- Treat `base_comparison.user_selected_contributions` as priority novelty zones
+- For modified files, determine whether the modification is trivial (refactor) or substantial (new logic, new algorithms)
 
 ## Instructions
-1. Read config.json for focus and novelty settings
+1. Read config.json for novelty and base settings
 2. Read project-map.json to understand structure and dependencies
 3. Scan key source files for patterns, base models, and third-party usage
 4. For each dependency/pattern, note how it's used and the modification level
