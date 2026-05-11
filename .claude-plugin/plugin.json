@@ -1,6 +1,6 @@
 {
   "name": "project2paper",
-  "description": "Turn any codebase into a well-structured technical paper. Supports baseline project comparison (--base) to identify novel contributions. 5-phase pipeline: scan → analyze → research → write → review.",
+  "description": "Turn any codebase into a well-structured technical paper. Supports baseline project comparison (--base) to identify novel contributions. 6-phase pipeline: config → scan → research → analyze → write → review.",
   "version": "0.2.0",
   "author": { "name": "project2paper" },
   "homepage": "https://github.com/evolll/project2paper",

@@ -5,8 +5,11 @@
 project2paper is a Claude Code plugin with a single slash command:
 
 ```
+/project2paper
 /project2paper /path/to/project
 ```
+
+All arguments are optional. If omitted, you will be prompted interactively.
 
 ## Options
 
@@ -19,12 +22,16 @@ project2paper is a Claude Code plugin with a single slash command:
 | `--length` | short, medium, long | medium | Paper depth |
 | `--base` | path | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--format` | markdown, latex, html | latex | Output format |
-| `--interactive` | flag | false | Enable phase-by-phase interaction with user feedback |
-| `--novelty` | flag | false | Highlight existing work vs novel contributions in the paper |
+| `--interactive` | flag | true | Enable phase-by-phase interaction with user feedback |
+| `--novelty` | flag | true | Highlight existing work vs novel contributions in the paper |
 
 ## Pipeline
 
-Before starting Phase 1, write `agent-workspace/project-input/config.json` with the user's settings.
+The command executes 6 phases sequentially.
+
+### Phase 0 — Interactive Configuration
+
+Read `agents/project-scanner.md`. If `<path>` or other options are missing, prompt the user interactively. Write `agent-workspace/project-input/config.json`.
 
 ### Phase 1 — project-scanner
 
@@ -48,7 +55,8 @@ Read `agents/paper-reviewer.md`. Review and refine the paper, write `agent-works
 
 ## Interactive mode
 
-When `--interactive` is used, the agent pauses after each phase to present findings and ask for user feedback before proceeding:
+When `--interactive` is used (default: true), the agent pauses after each phase to present findings and ask for user feedback before proceeding:
+- Phase 0: gather all settings interactively if missing
 - Before Phase 1, ask the user about their project's novelty mode (manual input vs AI auto-detect)
 - After Phase 1, show project summary and confirm. If `--base` was used, also show the comparison and ask which areas are contributions.
 - After Phase 2, show research findings and ask for additional related work
@@ -58,7 +66,7 @@ When `--interactive` is used, the agent pauses after each phase to present findi
 
 ## Novelty highlighting
 
-When `--novelty` is used, the paper includes inline markers distinguishing:
+When `--novelty` is used (default: true), the paper includes inline markers distinguishing:
 - 🆕 **Novel Contribution** — Truly new approach/algorithm/design
 - ✨ **Improved** — Adapted or optimized from prior work
 - 📚 **Existing** — Prior work or dependency

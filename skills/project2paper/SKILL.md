@@ -1,7 +1,7 @@
 ---
 name: project2paper
 description: Analyze any codebase and generate a publication-quality technical paper
-argument-hint: ["[<path>] [--base /path/to/base-project] [--format markdown|latex|html] [--novelty]"]
+argument-hint: ["[<path>] [--base /path/to/base-project] [--format markdown|latex|html] [--interactive] [--novelty]"]
 ---
 
 # /project2paper
@@ -22,9 +22,10 @@ All arguments are optional. If omitted, you will be prompted interactively.
 
 | Argument | Default | Description |
 |----------|---------|-------------|
-| `<path>` | prompted | Path to the project. Asked interactively if omitted |
+| `<path>` | prompted | Path to the project. **Always** asked interactively if omitted |
 | `--base` | none | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--format` | latex | markdown, latex, html. Asked interactively if omitted |
+| `--interactive` | true | Enable phase-by-phase interaction. Defaults to `true` |
 | `--novelty` | true | Highlight existing work vs novel contributions with inline markers |
 
 ## Pipeline

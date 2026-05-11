@@ -31,6 +31,10 @@ Write to `agent-workspace/project-input/config.json`:
 
 Parse `$ARGUMENTS` for `<path>`, `--base`, `--format`, `--interactive`, and `--novelty`.
 
+**Hard rule: if `<path>` is missing, empty, or unresolvable, you MUST prompt interactively. Do NOT silently skip or guess.**
+
+0. **Guard check** — If `$ARGUMENTS` is empty, contains only whitespace, or lacks a resolvable `<path>`: immediately enter full interactive mode. Ask for `project_path`, `paper_type`, `format`, and `base_path` in sequence. Do NOT proceed until `project_path` is provided and validated.
+
 1. **Project path** — If `<path>` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_project_path")`. Repeat until a valid path is provided.
 2. **Paper type** — If `--length` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_paper_type")`. Map the choice to `length`:
    - `1` → `short`

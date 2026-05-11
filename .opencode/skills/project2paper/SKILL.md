@@ -1,6 +1,6 @@
 ---
 name: project2paper
-description: Analyze any codebase and generate a publication-quality technical paper. 5-phase pipeline: project-scanner → research-extractor → project-analyzer → paper-writer → paper-reviewer
+description: Analyze any codebase and generate a publication-quality technical paper. 6-phase pipeline: project-scanner → research-extractor → project-analyzer → paper-writer → paper-reviewer
 license: MIT
 compatibility: opencode
 metadata:
@@ -14,9 +14,10 @@ Turn any codebase into a well-structured technical paper.
 
 ## Usage
 
-Tell me the project path and your preferences, and I'll run the 5-phase pipeline:
+All arguments are optional. If omitted, you will be prompted interactively.
 
 ```
+project2paper
 project2paper /path/to/project --base /path/to/base-project --length long --format latex --interactive --novelty
 ```
 
@@ -27,12 +28,16 @@ project2paper /path/to/project --base /path/to/base-project --length long --form
 | `--length` | short, medium, long | medium | Paper depth |
 | `--base` | path | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--format` | markdown, latex, html | latex | Output format |
-| `--interactive` | flag | false | Enable phase-by-phase user interaction for feedback and verification |
-| `--novelty` | flag | false | Highlight existing work vs novel contributions with inline markers |
+| `--interactive` | flag | true | Enable phase-by-phase user interaction for feedback and verification |
+| `--novelty` | flag | true | Highlight existing work vs novel contributions with inline markers |
 
 ## Pipeline
 
-Before starting Phase 1, write `agent-workspace/project-input/config.json` with the user's settings.
+The command executes 6 phases sequentially.
+
+### Phase 0 — Interactive Configuration
+
+Read `agents/project-scanner.md`. If `<path>` or other options are missing, prompt the user interactively. Write `agent-workspace/project-input/config.json`.
 
 ### Phase 1 — project-scanner
 
@@ -56,7 +61,8 @@ Read `agents/paper-reviewer.md`. Review and refine the paper, write `agent-works
 
 ## Interactive mode
 
-When `--interactive` is used:
+When `--interactive` is used (default: true):
+- Phase 0: gather all settings interactively if missing
 - Before Phase 1, ask the user about their project's novelty mode (manual input vs AI auto-detect)
 - After Phase 1, show project summary and confirm
 - After Phase 2, show research findings and ask for additional related work
@@ -66,7 +72,7 @@ When `--interactive` is used:
 
 ## Novelty highlighting
 
-When `--novelty` is used, each component, feature, and design decision is classified and marked as:
+When `--novelty` is used (default: true), each component, feature, and design decision is classified and marked as:
 - 🆕 Novel Contribution — new approach/algorithm/design
 - ✨ Improved — adapted/optimized from prior work
 - 📚 Existing — prior work or dependency
