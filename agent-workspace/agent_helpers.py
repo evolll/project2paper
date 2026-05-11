@@ -168,6 +168,31 @@ INTERACTIVE_PROMPTS = {
         "I'll guide you through 5 phases to generate a technical paper from your project.\n"
         "You'll have the chance to review and provide feedback at each step.\n\n"
     ),
+    "ask_project_path": (
+        "**Please provide the path to the project you want to analyze.**\n\n"
+        "Example: `/home/user/my-project` or `./my-project`\n\n"
+        "What is the project path?"
+    ),
+    "ask_length": (
+        "**Choose the paper length:**\n\n"
+        "1. **Short** (500-1000 words) — Executive summary, minimal detail\n"
+        "2. **Medium** (2000-4000 words) — Balanced depth, default\n"
+        "3. **Long** (5000-10000 words) — Exhaustive analysis with full code snippets\n\n"
+        "Which do you prefer? (1/2/3, or just press Enter for 2)"
+    ),
+    "ask_format": (
+        "**Choose the output format:**\n\n"
+        "1. **LaTeX** (.tex) — Best for academic submissions, default\n"
+        "2. **Markdown** (.md) — Easy to read and share\n"
+        "3. **HTML** (.html) — Rich rendering in browsers\n\n"
+        "Which do you prefer? (1/2/3, or just press Enter for 1)"
+    ),
+    "ask_base_path": (
+        "**Do you want to compare against a baseline project?**\n\n"
+        "If yes, provide the path to the baseline project.\n"
+        "If no, just press Enter or type `no`.\n\n"
+        "Baseline path (optional):"
+    ),
     "base_comparison_review": (
         "### Base Project Comparison\n\n"
         "I compared the target project with the base project. Here are the differences:\n\n"

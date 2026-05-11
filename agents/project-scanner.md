@@ -44,29 +44,57 @@ If `base_path` is present, `base_comparison` will contain:
 ```
 
 ## Instructions
-1. Read config.json to get the project path and check `interactive`, `novelty_highlight`, and `base_path` options
-2. Walk the directory tree (exclude node_modules, __pycache__, .git, dist, build, .venv)
-3. For each file: record path, extension, line count
-4. Detect the primary language and framework
-5. Identify entry points, test files, config files
-6. Count total files and lines of code per language
+
+### Step 0 — Interactive Configuration Setup
+
+Before scanning, ensure all required settings are collected. Parse `$ARGUMENTS` for `<path>`, `--base`, `--length`, `--format`, `--interactive`, and `--novelty`.
+
+1. **Project path** — If `<path>` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_project_path")`. Repeat until a valid path is provided.
+2. **Paper length** — If `--length` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_length")`. Default to `medium` if the user skips.
+3. **Output format** — If `--format` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_format")`. Default to `latex` if the user skips.
+4. **Base project** — If `--base` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_base_path")`. If the user declines, set `base_path` to `null`.
+5. **Interactive mode** — If `--interactive` is missing, default to `true`.
+6. **Novelty highlight** — If `--novelty` is missing, default to `true`.
+7. Resolve `<path>` to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
+8. If `--base` is provided, resolve it to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
+9. Write `agent-workspace/project-input/config.json` with all gathered settings:
+   ```json
+   {
+     "project_path": "<absolute path>",
+     "base_path": "<absolute path or null>",
+     "length": "short|medium|long",
+     "output_format": "markdown|latex|html",
+     "interactive": true,
+     "novelty_highlight": true,
+     "novelty_mode": "auto"
+   }
+   ```
+
+### Step 1 — Project Scan
+
+10. Read `config.json` to get the project path and check `interactive`, `novelty_highlight`, and `base_path` options.
+11. Walk the directory tree (exclude node_modules, __pycache__, .git, dist, build, .venv).
+12. For each file: record path, extension, line count.
+13. Detect the primary language and framework.
+14. Identify entry points, test files, config files.
+15. Count total files and lines of code per language.
 
 ### Base project comparison (config.base_path is set)
 
 If a `base_path` is provided in config.json:
 
-1. **Scan the base project** using the same exclusions and rules as the target project
-2. **Compare the two projects** and generate a difference outline covering:
-   - New files/directories (present in target, absent in base)
-   - Modified files (same path but different content/size)
-   - Removed files/directories (present in base, absent in target)
-   - Added dependencies (in target but not in base)
-   - Removed dependencies (in base but not in target)
-   - New feature areas inferred from file groupings (e.g., "Authentication module", "Payment gateway", "Custom caching layer")
-3. **Present the difference outline** to the user as an interactive prompt. Use `agent_helpers.get_interactive_prompt("base_comparison_review", comparison=...)` or a custom prompt.
-4. **Ask the user to select contributions**: "Which of the following areas should be treated as paper contributions (novelty points)?" Present a numbered list of the detected new feature areas. Allow the user to select one or more by number, or type `all`.
-5. **Store the user's selection** in `base_comparison.user_selected_contributions`
-6. **Store the comparison** in the output JSON under `base_comparison`
+16. **Scan the base project** using the same exclusions and rules as the target project.
+17. **Compare the two projects** and generate a difference outline covering:
+    - New files/directories (present in target, absent in base)
+    - Modified files (same path but different content/size)
+    - Removed files/directories (present in base, absent in target)
+    - Added dependencies (in target but not in base)
+    - Removed dependencies (in base but not in target)
+    - New feature areas inferred from file groupings (e.g., "Authentication module", "Payment gateway", "Custom caching layer")
+18. **Present the difference outline** to the user as an interactive prompt. Use `agent_helpers.get_interactive_prompt("base_comparison_review", comparison=...)` or a custom prompt.
+19. **Ask the user to select contributions**: "Which of the following areas should be treated as paper contributions (novelty points)?" Present a numbered list of the detected new feature areas. Allow the user to select one or more by number, or type `all`.
+20. **Store the user's selection** in `base_comparison.user_selected_contributions`.
+21. **Store the comparison** in the output JSON under `base_comparison`.
 
 If `interactive` is false, automatically select all detected new feature areas as contributions and store them.
 
