@@ -6,7 +6,7 @@ argument-hint: ["[<path>] [--base /path/to/base-project] [--format markdown|late
 
 # /project2paper
 
-Analyze a codebase and produce a well-structured technical paper. A 5-phase agent pipeline scans the project, discovers base models, analyzes novelty, generates an analysis outline, writes the paper, and reviews it.
+Analyze a codebase and produce a well-structured technical paper. A 6-phase agent pipeline collects settings, scans the project, discovers base models, analyzes novelty, generates an analysis outline, writes the paper, and reviews it.
 
 ## Usage
 
@@ -29,13 +29,13 @@ All arguments are optional. If omitted, you will be prompted interactively.
 
 ## Pipeline
 
-The command executes 5 phases sequentially. Each phase reads its agent prompt, processes the project, and saves output to `agent-workspace/`. The agent drives execution — read the SKILL.md in each phase's agent prompt for detailed instructions.
+The command executes 6 phases sequentially. Each phase reads its agent prompt, processes the project, and saves output to `agent-workspace/`. The agent drives execution — read the SKILL.md in each phase's agent prompt for detailed instructions.
 
-Tone and depth are determined by the paper type selected in Phase 1.
+Tone and depth are determined by the paper type selected in Phase 0.
 
 ---
 
-## Phase 1 — Project Scan
+## Phase 0 — Interactive Configuration
 
 **Agent prompt:** `agents/project-scanner.md`
 
@@ -50,13 +50,23 @@ Tone and depth are determined by the paper type selected in Phase 1.
 2. Resolve `<path>` to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
 3. If `--base` is provided, resolve it to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
 4. Write `agent-workspace/project-input/config.json` with all gathered settings.
-5. Walk the directory tree, catalog every file (exclude `node_modules/`, `__pycache__/`, `.git/`, `dist/`, `build/`)
-6. Detect primary language and framework
-7. Identify entry points, test files, config files
-8. Count files and lines of code per language
-9. If `--base` is provided, scan the base project and compare it with the target project. List differences in structure, new files, modified files, and new dependencies. Present the differences as an outline and ask the user which parts should be treated as paper contributions (novelty points).
-10. If `--novelty`: ask user to choose novelty identification mode (manual vs auto)
-11. Write `agent-workspace/analysis/project-map.json`
+
+---
+
+## Phase 1 — Project Scan
+
+**Agent prompt:** `agents/project-scanner.md`
+
+1. Read config from `agent-workspace/project-input/config.json`
+2. Walk the directory tree, catalog every file (exclude `node_modules/`, `__pycache__/`, `.git/`, `dist/`, `build/`)
+3. Detect primary language and framework
+4. Identify entry points, test files, config files
+5. Count files and lines of code per language
+6. If `--base` is provided, scan the base project and compare it with the target project. List differences in structure, new files, modified files, and new dependencies.
+7. If `--base` is provided, present the differences as an outline and ask the user which parts should be treated as paper contributions (novelty points).
+8. If `--base` is provided, write the comparison results (differences, selected contributions, novelty points) into `project-map.json` under the `base_comparison` key.
+9. If `--novelty`: ask user to choose novelty identification mode (manual vs auto)
+10. Write `agent-workspace/analysis/project-map.json`
 
 ---
 

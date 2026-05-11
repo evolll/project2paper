@@ -173,6 +173,13 @@ INTERACTIVE_PROMPTS = {
         "Example: `/home/user/my-project` or `./my-project`\n\n"
         "What is the project path?"
     ),
+    "ask_paper_type": (
+        "**Choose the paper category:**\n\n"
+        "1. **Technical Report** — concise, practical, ~500-1K words\n"
+        "2. **Journal/Conference Paper** — academic, formal, ~2K-4K words\n"
+        "3. **Thesis/Dissertation** — comprehensive, in-depth, ~5K-10K words\n\n"
+        "Which do you prefer? (1/2/3, or just press Enter for 2)"
+    ),
     "ask_length": (
         "**Choose the paper length:**\n\n"
         "1. **Short** (500-1000 words) — Executive summary, minimal detail\n"
