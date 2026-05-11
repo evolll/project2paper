@@ -1,6 +1,6 @@
 # project2paper
 
-**Turn any codebase into a well-structured technical paper.**
+**Turn any codebase into a well-structured paper.**
 
 A 5-phase agent pipeline that analyzes any project and produces a publication-quality paper. Works with **Claude Code** (slash command) and **OpenCode** (skill).
 
