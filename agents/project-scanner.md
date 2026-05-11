@@ -111,7 +111,7 @@ If a `base_path` is provided in config.json:
 
 If `interactive` is false, automatically select all detected new feature areas as contributions and store them.
 
-### Interactive mode (config.interactive == true && config.novelty_highlight == true)
+### Interactive mode (config.interactive == true && config.novelty_highlight == true && config.base_path is null)
 
 13. **Ask user to choose novelty identification mode** — Present `ask_novelty_mode` prompt (use `agent_helpers.get_interactive_prompt("ask_novelty_mode")`). Ask the user to choose between **manual** (user describes novelty points) or **auto** (AI discovers novelty). Store the choice in config as `novelty_mode` and update `config.json`.
 

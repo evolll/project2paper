@@ -65,7 +65,7 @@ Tone and depth are determined by the paper type selected in Phase 0.
 6. If `--base` is provided, scan the base project and compare it with the target project. List differences in structure, new files, modified files, and new dependencies.
 7. If `--base` is provided, present the differences as an outline and ask the user which parts should be treated as paper contributions (novelty points).
 8. If `--base` is provided, write the comparison results (differences, selected contributions, novelty points) into `project-map.json` under the `base_comparison` key.
-9. If `--novelty`: ask user to choose novelty identification mode (manual vs auto)
+9. If `--base` is not provided and `--novelty` is true: ask user to choose novelty identification mode (manual vs auto)
 10. Write `agent-workspace/analysis/project-map.json`
 
 ---
