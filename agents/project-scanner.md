@@ -21,6 +21,8 @@ Write to `agent-workspace/project-input/config.json`:
   "base_path": "<absolute path or null>",
   "length": "short|medium|long",
   "output_format": "markdown|latex|html",
+  "latex_template": "article",
+  "references": ["2304.12345", ...],
   "interactive": true,
   "novelty_highlight": true,
   "novelty_mode": "auto"
@@ -29,7 +31,7 @@ Write to `agent-workspace/project-input/config.json`:
 
 ### Instructions
 
-Parse `$ARGUMENTS` for `<path>`, `--base`, `--format`, `--interactive`, and `--novelty`.
+Parse `$ARGUMENTS` for `<path>`, `--base`, `--format`, `--template`, `--interactive`, and `--novelty`.
 
 **Hard rule: if `<path>` is missing, empty, or unresolvable, you MUST prompt interactively. Do NOT silently skip or guess.**
 
@@ -42,12 +44,14 @@ Parse `$ARGUMENTS` for `<path>`, `--base`, `--format`, `--interactive`, and `--n
    - `3` → `long`
    Default to `medium` if the user skips.
 3. **Output format** — If `--format` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_format")`. Default to `latex` if the user skips.
-4. **Base project** — If `--base` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_base_path")`. If the user declines, set `base_path` to `null`.
-5. **Interactive mode** — If `--interactive` is missing, default to `true`.
-6. **Novelty highlight** — If `--novelty` is missing, default to `true`.
-7. Resolve `<path>` to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
-8. If `--base` is provided, resolve it to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
-9. Write `agent-workspace/project-input/config.json` with all gathered settings.
+4. **LaTeX template** — If `--template` is missing and format is `latex`, prompt the user with `agent_helpers.get_interactive_prompt("ask_template")`. Default to `article`. Store as `latex_template`.
+5. **Base project** — If `--base` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_base_path")`. If the user declines, set `base_path` to `null`.
+6. **Reference papers** — Prompt the user with `agent_helpers.get_interactive_prompt("ask_references")`. Parse the comma-separated input into a list. Store as `references` in config.json (empty list if skipped).
+7. **Interactive mode** — If `--interactive` is missing, default to `true`.
+8. **Novelty highlight** — If `--novelty` is missing, default to `true`.
+9. Resolve `<path>` to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
+10. If `--base` is provided, resolve it to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
+11. Write `agent-workspace/project-input/config.json` with all gathered settings.
 
 ---
 

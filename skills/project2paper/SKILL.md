@@ -1,7 +1,7 @@
 ---
 name: project2paper
 description: Analyze any codebase and generate a publication-quality technical paper
-argument-hint: ["[<path>] [--base /path/to/base-project] [--format markdown|latex|html] [--interactive] [--novelty]"]
+argument-hint: ["[<path>] [--base /path/to/base-project] [--template article|ieee|acm] [--format markdown|latex|html] [--interactive] [--novelty]"]
 ---
 
 # /project2paper
@@ -24,6 +24,7 @@ All arguments are optional. If omitted, you will be prompted interactively.
 |----------|---------|-------------|
 | `<path>` | prompted | Path to the project. **Always** asked interactively if omitted |
 | `--base` | none | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
+| `--template` | article | LaTeX template style: article, ieee, acm. Asked interactively if format is latex |
 | `--format` | latex | markdown, latex, html. Asked interactively if omitted |
 | `--interactive` | true | Enable phase-by-phase interaction. Defaults to `true` |
 | `--novelty` | true | Highlight existing work vs novel contributions with inline markers |
@@ -106,7 +107,10 @@ Cover all areas equally (architecture, features, performance).
 2. Write the paper according to the selected paper type (length and tone). Cover architecture, features, and performance evenly unless `base` comparison highlights specific contribution areas.
 3. If `--novelty`: include novelty markers inline
 4. Output format specified by `format`
-5. Write to `agent-workspace/output/paper.{md|tex|html}`
+5. **LaTeX output**: write per-chapter `.tex` files under `output/chapters/` + a `main.tex` root file using `\include{}`. Use the template style from `--template` (article/ieee/acm).
+6. **Placeholders**: for missing content, use `\todo{}` for text, `\missingfigure{}` for diagrams, `\todo{}` inside table/code environments.
+7. **References**: if the user provided references during interactive setup, generate a `references.bib` file and cite them using `\cite{}`.
+8. Write to `agent-workspace/output/main.tex` (LaTeX) or `agent-workspace/output/paper.{md|html}`.
 
 ---
 

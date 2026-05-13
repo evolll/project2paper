@@ -5,7 +5,7 @@ project2paper is a Claude Code plugin that generates a technical paper from any 
 ## When the user runs `/project2paper`
 
 1. Read `skills/project2paper/SKILL.md` — it defines the full flow
-2. Parse arguments: project path, `--length`, `--base`, `--format`, `--interactive`, `--novelty`
+2. Parse arguments: project path, `--base`, `--format`, `--template`, `--interactive`, `--novelty`
 3. Write `agent-workspace/project-input/config.json` with parsed settings (set `interactive: true` if `--interactive` flag, `novelty_highlight: true` if `--novelty` flag)
 4. Execute Phase 1–5 by reading each agent prompt in sequence
 5. In interactive mode, use `agent-workspace/agent_helpers.py` helper functions for user prompts and novelty rendering
@@ -28,7 +28,7 @@ project2paper is a Claude Code plugin that generates a technical paper from any 
 | `agent-workspace/project-input/config.json` | User settings written by Phase 1 pre-flight |
 | `agent-workspace/analysis/` | Intermediate analysis artifacts (project-map.json ← Phase 1, research-findings.json ← Phase 2, architecture.json + analysis-outline.md ← Phase 3) |
 | `agent-workspace/output/` | Final paper output |
-| `agent-workspace/templates/` | Output format templates |
+| `agent-workspace/templates/` | Output format templates (latex/article-chapter.tex, latex/ieee-chapter.tex, latex/acm-chapter.tex) |
 
 ## Instructions
 

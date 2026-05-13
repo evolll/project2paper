@@ -194,6 +194,20 @@ INTERACTIVE_PROMPTS = {
         "3. **HTML** (.html) — Rich rendering in browsers\n\n"
         "Which do you prefer? (1/2/3, or just press Enter for 1)"
     ),
+    "ask_template": (
+        "**Choose the LaTeX template style:**\n\n"
+        "1. **Article** — Standard academic article, general purpose (default)\n"
+        "2. **IEEE** — IEEE conference/transaction format\n"
+        "3. **ACM** — ACM conference format (SIGCHI, SIGPLAN, etc.)\n\n"
+        "Which do you prefer? (1/2/3, or press Enter for 1)"
+    ),
+    "ask_references": (
+        "**Do you have any reference papers to cite in the paper?**\n\n"
+        "You can provide arXiv IDs, DOIs, URLs, or file paths to PDFs.\n"
+        "Separate multiple references with commas.\n\n"
+        "Examples: `2304.12345, https://doi.org/10.1145/3132847.3132886, /papers/related.pdf`\n\n"
+        "References (optional, press Enter to skip):"
+    ),
     "ask_base_path": (
         "**Do you want to compare against a baseline project?**\n\n"
         "If yes, provide the path to the baseline project.\n"
@@ -298,6 +312,8 @@ DEFAULT_CONFIG = {
     "novelty_mode": "auto",
     "novelty_in_title": True,
     "novelty_in_toc": True,
+    "latex_template": "article",
+    "references": [],
 }
 
 
@@ -350,6 +366,168 @@ def generate_research_summary(findings: dict) -> str:
 
 
 # ─── Novelty Summary Generation ────────────────────────────────────────
+
+# ─── Per-Chapter Output Helpers ────────────────────────────────────────
+
+CHAPTER_STRUCTURE = {
+    "short": [
+        ("00-abstract", "Abstract"),
+        ("01-introduction", "Introduction"),
+        ("02-architecture", "Architecture Overview"),
+        ("03-key-findings", "Key Findings"),
+        ("04-conclusion", "Conclusion"),
+    ],
+    "medium": [
+        ("00-abstract", "Abstract"),
+        ("01-introduction", "Introduction"),
+        ("02-architecture", "Architecture Overview"),
+        ("03-components", "Core Components"),
+        ("04-design-decisions", "Key Design Decisions"),
+        ("05-discussion", "Discussion"),
+        ("06-conclusion", "Conclusion"),
+        ("07-references", "References"),
+    ],
+    "long": [
+        ("00-abstract", "Abstract"),
+        ("01-introduction", "Introduction"),
+        ("02-architecture", "Architecture Overview"),
+        ("03-components", "Core Components"),
+        ("04-design-decisions", "Key Design Decisions"),
+        ("05-data-flow", "Data Flow & Interactions"),
+        ("06-implementation", "Implementation Highlights"),
+        ("07-discussion", "Discussion"),
+        ("08-conclusion", "Conclusion"),
+        ("09-references", "References"),
+    ],
+}
+
+
+def get_chapter_list(length: str) -> list:
+    """Get chapter filenames for the given length.
+
+    Returns list of (filename_stem, section_title) tuples.
+    """
+    return CHAPTER_STRUCTURE.get(length, CHAPTER_STRUCTURE["medium"])
+
+
+def render_placeholder_block(content_type: str, label: str = "") -> str:
+    """Render a LaTeX placeholder block for missing content.
+
+    Args:
+        content_type: "text", "figure", "table", "code"
+        label: Optional description of what goes here
+    """
+    if content_type == "figure":
+        return (
+            "\\begin{figure}[htbp]\n"
+            "  \\centering\n"
+            "  \\missingfigure{" + (label or "Diagram placeholder") + "}\n"
+            "  \\caption{" + (label or "To be added") + "}\n"
+            "  \\label{fig:" + label.lower().replace(" ", "-") + "}\n"
+            "\\end{figure}\n"
+            "\\todo{Insert diagram: " + (label or "architecture diagram") + "}"
+        )
+    elif content_type == "table":
+        return (
+            "\\begin{table}[htbp]\n"
+            "  \\centering\n"
+            "  \\caption{" + (label or "Table placeholder") + "}\n"
+            "  \\label{tab:" + label.lower().replace(" ", "-") + "}\n"
+            "  \\todo{Insert table content here}\n"
+            "\\end{table}\n"
+        )
+    elif content_type == "code":
+        return (
+            "\\begin{lstlisting}[caption={" + (label or "Code snippet") + "}, label=lst:"
+            + label.lower().replace(" ", "-") + "]\n"
+            "  % TODO: Insert code here\n"
+            "\\end{lstlisting}\n"
+        )
+    else:
+        return "\\todo{Content to be added: " + (label or "section content") + "}"
+
+
+def generate_main_tex(chapters: list, config: dict) -> str:
+    """Generate a main.tex file that includes all chapter files.
+
+    Args:
+        chapters: list of (filename_stem, section_title) tuples
+        config: config dict with latex_template, novelty_highlight, etc.
+    """
+    template = config.get("latex_template", "article")
+
+    lines = []
+    if template == "ieee":
+        lines.extend([
+            "\\documentclass[conference]{IEEEtran}",
+            "\\usepackage{cite}",
+            "\\usepackage{amsmath,amssymb,amsfonts}",
+            "\\usepackage{algorithmic}",
+            "\\usepackage{graphicx}",
+            "\\usepackage{textcomp}",
+            "\\usepackage{xcolor}",
+            "\\usepackage{booktabs}",
+            "\\usepackage{tabularx}",
+            "\\usepackage{todonotes}",
+            "\\usepackage{hyperref}",
+            "\\def\\BibTeX{{\\rm B\\kern-.05em{\\sc i\\kern-.025em b}\\kern-.08em",
+            "    T\\kern-.1667em\\lower.7ex\\hbox{E}\\kern-.125emX}}",
+        ])
+    elif template == "acm":
+        lines.extend([
+            "\\documentclass[sigconf]{acmart}",
+            "\\usepackage{booktabs}",
+            "\\usepackage{tabularx}",
+            "\\usepackage{todonotes}",
+            "\\settopmatter{printacmref=false}",
+        ])
+    else:
+        lines.extend([
+            "\\documentclass[11pt,a4paper]{article}",
+            "\\usepackage[utf8]{inputenc}",
+            "\\usepackage[T1]{fontenc}",
+            "\\usepackage{geometry}",
+            "\\usepackage{graphicx}",
+            "\\usepackage{listings}",
+            "\\usepackage{hyperref}",
+            "\\usepackage{booktabs}",
+            "\\usepackage{amsmath}",
+            "\\usepackage{abstract}",
+            "\\usepackage{xcolor}",
+            "\\usepackage{tabularx}",
+            "\\usepackage{todonotes}",
+            "\\geometry{margin=1in}",
+        ])
+
+    if config.get("novelty_highlight"):
+        lines.extend([
+            "",
+            "% ── Novelty highlighting ──",
+            "\\newcommand{\\novel}[1]{\\textbf{\\textcolor[RGB]{34,197,94}{🆕 #1}}}",
+            "\\newcommand{\\existing}[1]{\\textbf{\\textcolor[RGB]{107,114,128}{📚 #1}}}",
+            "\\newcommand{\\improved}[1]{\\textbf{\\textcolor[RGB]{245,158,11}{✨ #1}}}",
+            "\\newcommand{\\baseline}[1]{\\textbf{\\textcolor[RGB]{59,130,246}{🔧 #1}}}",
+        ])
+
+    lines.extend([
+        "",
+        "\\title{" + config.get("project_name", "Project Title") + "}",
+        "\\author{" + config.get("author", "Author") + "}",
+        "\\date{\\today}",
+        "",
+        "\\begin{document}",
+        "\\maketitle",
+        "",
+    ])
+
+    for stem, title in chapters:
+        lines.append(f"\\include{{chapters/{stem}}}")
+        lines.append("")
+
+    lines.append("\\end{document}")
+
+    return "\n".join(lines)
+
 
 def generate_novelty_summary(findings: dict) -> str:
     """Generate a summary table of novelty classifications."""

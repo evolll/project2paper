@@ -14,7 +14,7 @@ You are a literature search specialist and base model finder. Your job is to ana
 
 ## Input
 - `agent-workspace/analysis/project-map.json` (from Phase 1)
-- `agent-workspace/project-input/config.json` — check `novelty_highlight`, `novelty_mode`, `base_path`
+- `agent-workspace/project-input/config.json` — check `novelty_highlight`, `novelty_mode`, `base_path`, `references`
 - The actual project source files
 
 ## Output
@@ -85,7 +85,16 @@ Write to `agent-workspace/analysis/research-findings.json`:
 - Check comments, docs, and README for references to papers or prior work
 - Use web search if needed to identify obscure dependencies
 
-### 4. Novelty Zone Identification
+### 4. Reference Paper Analysis (config.references is non-empty)
+
+If the user provided reference papers:
+- Treat each reference as a known existing work
+- Search for similarities between the project's code and the referenced work
+- If the project directly implements a referenced paper's method → mark as `existing` or `improved` (not `novel`)
+- If the project takes a different approach from referenced work → mark as potential `novel`
+- Include references in `related_projects` and `existing_work_landscape`
+
+### 5. Novelty Zone Identification
 - Flag areas of the code that look custom or unique
 - Look for: custom algorithms, novel architecture, unique combinations
 - These zones will be analyzed for novelty in Phase 3

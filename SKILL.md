@@ -14,12 +14,13 @@ All arguments are optional. If omitted, you will be prompted interactively.
 ## Options
 
 ```
-/project2paper /path/to/project --base /path/to/base-project --length long --format latex --interactive --novelty
+/project2paper /path/to/project
+/project2paper /path/to/project --template ieee --format latex --interactive --novelty
 ```
 
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
-| `--length` | short, medium, long | medium | Paper depth |
+| `--template` | article, ieee, acm | article | LaTeX template style (article/general, ieee conference, acm conference) |
 | `--base` | path | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--format` | markdown, latex, html | latex | Output format |
 | `--interactive` | flag | true | Enable phase-by-phase interaction with user feedback |
@@ -47,7 +48,7 @@ Read `agents/project-analyzer.md`. Analyze architecture using Phase 2 context, c
 
 ### Phase 4 — paper-writer
 
-Read `agents/paper-writer.md`. Generate the paper in academic style at the specified length/format. If `--base` is provided, emphasize the selected contribution areas. Write `agent-workspace/output/paper.{md|tex|html}`.
+Read `agents/paper-writer.md`. Generate the paper in academic style at the specified length/focus/format. For LaTeX output, writes per-chapter `.tex` files under `output/chapters/` + a `main.tex` root file. Missing content is marked with `\todo{}` placeholders and `\missingfigure{}` for diagrams. If references were provided, they are cited and a `references.bib` is generated. Write to `agent-workspace/output/main.tex` (LaTeX) or `agent-workspace/output/paper.{md|html}`.
 
 ### Phase 5 — paper-reviewer
 
