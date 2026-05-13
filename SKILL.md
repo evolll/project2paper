@@ -31,7 +31,16 @@ The command executes 6 phases sequentially.
 
 ### Phase 0 — Interactive Configuration
 
-Read `agents/project-scanner.md`. If `<path>` or other options are missing, prompt the user interactively. Write `agent-workspace/project-input/config.json`.
+Read `agents/project-scanner.md`. If `<path>` or other options are missing, prompt the user interactively:
+
+- `ask_project_path` — if `<path>` is missing, prompt until valid path given
+- `ask_paper_type` — choose paper length/category (Technical Report / Journal Paper / Thesis)
+- `ask_format` — if `--format` is missing (default: latex)
+- **If format is `latex`**: `ask_template_path` — **REQUIRED**. The user MUST provide the path to their own `.tex` template file. Validate the path exists. Retry with `ask_template_retry` until a valid path is given. Store as `user_template_path`.
+- `ask_base_path` — if `--base` is missing, optional
+- `ask_references` — optional reference paper list
+
+Write `agent-workspace/project-input/config.json` with all gathered settings.
 
 ### Phase 1 — project-scanner
 

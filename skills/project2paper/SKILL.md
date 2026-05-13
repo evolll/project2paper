@@ -47,6 +47,7 @@ Tone and depth are determined by the paper type selected in Phase 0.
      2. **Journal/Conference Paper**: academic, formal, ~2K-4K words
      3. **Thesis/Dissertation**: comprehensive, in-depth, ~5K-10K words
    - `ask_format` — if `--format` is missing (default: latex)
+   - **if format is `latex`**: `ask_template_path` — **REQUIRED**. Ask the user for the path to their `.tex` template file. Validate the path exists. If invalid, use `ask_template_retry` and repeat until a valid path is provided. Store as `user_template_path`.
    - `ask_base_path` — if `--base` is missing (default: none)
 2. Resolve `<path>` to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
 3. If `--base` is provided, resolve it to an absolute path. If it doesn't exist or isn't a directory, error and STOP.
@@ -106,7 +107,7 @@ Cover all areas equally (architecture, features, performance).
 2. Write the paper according to the selected paper type (length and tone). Cover architecture, features, and performance evenly unless `base` comparison highlights specific contribution areas.
 3. If `--novelty`: include novelty markers inline
 4. Output format specified by `format`
-5. **LaTeX output**: write per-chapter `.tex` files under `output/chapters/` + a `main.tex` root file using `\include{}`. If the user provided a custom `.tex` template (`user_template_path`), use its preamble and document wrapper. Otherwise, generate a minimal article-based template.
+5. **LaTeX output**: write per-chapter `.tex` files under `output/chapters/` + a `main.tex` root file using `\include{}`. Use the user's template from `user_template_path` — read its preamble and document wrapper, inject chapter includes between `\begin{document}` and `\end{document}`. The template is REQUIRED (validated in Phase 0).
 6. **Placeholders**: for missing content, use `\todo{}` for text, `\missingfigure{}` for diagrams, `\todo{}` inside table/code environments.
 7. **References**: if the user provided references during interactive setup, generate a `references.bib` file and cite them using `\cite{}`.
 8. Write to `agent-workspace/output/main.tex` (LaTeX) or `agent-workspace/output/paper.{md|html}`.
