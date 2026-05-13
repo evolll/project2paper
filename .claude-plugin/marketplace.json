@@ -8,7 +8,7 @@
   "plugins": [
     {
       "name": "project2paper",
-      "description": "Turn any codebase into a well-structured technical paper. 5-phase pipeline: scan → analyze → research → write → review.",
+      "description": "Turn any codebase into a well-structured technical paper. User-provided LaTeX template, interactive setup, novelty classification, baseline comparison, per-chapter output. 6-phase pipeline: config → scan → research → analyze → write → review.",
       "source": {
         "source": "github",
         "repo": "evolll/project2paper"
