@@ -19,7 +19,7 @@ You are a technical paper writer. Your job is to synthesize all analysis and res
 
 ### LaTeX format
 Write to `agent-workspace/output/`:
-- `main.tex` — Root file with `\include{}` commands (use user template or generate minimal preamble)
+- `main.tex` — Root file with `\include{}` commands based on user's template preamble
 - `chapters/00-abstract.tex`
 - `chapters/01-introduction.tex`
 - `chapters/02-architecture.tex`
@@ -34,17 +34,22 @@ Use `agent_helpers.get_chapter_list(length)` to get the chapter list.
 ### Markdown / HTML formats
 Write single file to `agent-workspace/output/paper.{md|html}`.
 
-## User-provided LaTeX template (LaTeX only)
+## User-provided LaTeX template (REQUIRED for LaTeX output)
 
-If `config.json` → `user_template_path` is set:
-1. Read the user's `.tex` template file from that path
+`config.json` → `user_template_path` MUST be set when `output_format` is `latex`.
+
+1. Read the user's `.tex` template file from `user_template_path`
 2. Copy it to `output/user-template.tex` as a backup
-3. Extract the preamble (everything before `\begin{document}`) and inject it into `main.tex`
-4. Keep the user's `\begin{document}` / `\end{document}` wrapper
-5. Insert `\include{chapters/...}` statements between `\begin{document}` and `\end{document}`
+3. Parse the template:
+   - Extract everything before `\begin{document}` as the **preamble**
+   - Keep `\begin{document}` and `\end{document}` as wrapper
+4. Generate `main.tex`:
+   - Write the user's preamble
+   - Write `\begin{document}` (and any user content after it, like `\maketitle`)
+   - Insert `\include{chapters/...}` for each chapter
+   - Write `\end{document}`
 
-If `user_template_path` is null (user skipped):
-- Generate a minimal `main.tex` with a basic `article` document class, common packages (`graphicx`, `hyperref`, `booktabs`, `amsmath`, `xcolor`, `todonotes`), and `\include{}` statements for each chapter.
+If `user_template_path` is missing or the file doesn't exist: ERROR and STOP. The template is required.
 
 ## Reference papers
 If `config.json` → `references` is non-empty:

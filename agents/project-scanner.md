@@ -21,7 +21,7 @@ Write to `agent-workspace/project-input/config.json`:
   "base_path": "<absolute path or null>",
   "length": "short|medium|long",
   "output_format": "markdown|latex|html",
-  "user_template_path": "/path/to/template.tex or null",
+  "user_template_path": "/path/to/template.tex (required if format=latex)",
   "references": ["2304.12345", ...],
   "interactive": true,
   "novelty_highlight": true,
@@ -44,7 +44,12 @@ Parse `$ARGUMENTS` for `<path>`, `--base`, `--format`, `--interactive`, and `--n
    - `3` → `long`
    Default to `medium` if the user skips.
 3. **Output format** — If `--format` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_format")`. Default to `latex` if the user skips.
-4. **LaTeX template** — If format is `latex`, prompt the user with `agent_helpers.get_interactive_prompt("ask_template_path")`. The user can provide a path to their own `.tex` template file, or press Enter to use an auto-generated basic template. Store as `user_template_path` (or `null` if skipped).
+4. **LaTeX template** — REQUIRED if format is `latex`. Prompt the user with `agent_helpers.get_interactive_prompt("ask_template_path")`. After the user provides a path:
+   - Resolve it to an absolute path
+   - Verify it exists and is a `.tex` file
+   - If invalid, retry with `agent_helpers.get_interactive_prompt("ask_template_retry")`
+   - Repeat until a valid path is provided
+   - Store as `user_template_path`
 5. **Base project** — If `--base` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_base_path")`. If the user declines, set `base_path` to `null`.
 6. **Reference papers** — Prompt the user with `agent_helpers.get_interactive_prompt("ask_references")`. Parse the comma-separated input into a list. Store as `references` in config.json (empty list if skipped).
 7. **Interactive mode** — If `--interactive` is missing, default to `true`.

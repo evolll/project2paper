@@ -195,12 +195,18 @@ INTERACTIVE_PROMPTS = {
         "Which do you prefer? (1/2/3, or just press Enter for 1)"
     ),
     "ask_template_path": (
-        "**Provide the path to your LaTeX template file (optional).**\n\n"
+        "**Provide the path to your LaTeX template file.**\n\n"
         "This is your own `.tex` file that defines the document class, packages, and style.\n"
-        "The system will use its preamble and insert chapter content into it.\n\n"
+        "The system will read its preamble and insert chapter content into it.\n\n"
         "Example: `/home/user/templates/my-paper.tex`\n\n"
-        "If you don't have one, press Enter — the system will generate a basic template.\n\n"
-        "Template path (optional):"
+        "The file must exist and be a valid `.tex` file.\n\n"
+        "Template path:"
+    ),
+    "ask_template_retry": (
+        "**The template file was not found or is invalid.**\n\n"
+        "Please provide a valid path to an existing `.tex` file.\n"
+        "Example: `/home/user/templates/my-paper.tex`\n\n"
+        "Template path:"
     ),
     "ask_references": (
         "**Do you have any reference papers to cite in the paper?**\n\n"
