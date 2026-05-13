@@ -18,14 +18,13 @@ All arguments are optional. If omitted, you will be prompted interactively.
 
 ```
 project2paper
-project2paper /path/to/project --base /path/to/base-project --length long --format latex --interactive --novelty
+project2paper /path/to/project --base /path/to/base-project --format latex --interactive --novelty
 ```
 
 ## Configuration options
 
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
-| `--template` | article, ieee, acm | article | LaTeX template style (article/general, ieee conference, acm conference) |
 | `--base` | path | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--format` | markdown, latex, html | latex | Output format |
 | `--interactive` | flag | true | Enable phase-by-phase user interaction for feedback and verification |

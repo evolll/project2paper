@@ -15,12 +15,11 @@ All arguments are optional. If omitted, you will be prompted interactively.
 
 ```
 /project2paper /path/to/project
-/project2paper /path/to/project --template ieee --format latex --interactive --novelty
+/project2paper /path/to/project --format latex --interactive --novelty
 ```
 
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
-| `--template` | article, ieee, acm | article | LaTeX template style (article/general, ieee conference, acm conference) |
 | `--base` | path | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
 | `--format` | markdown, latex, html | latex | Output format |
 | `--interactive` | flag | true | Enable phase-by-phase interaction with user feedback |

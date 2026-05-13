@@ -21,7 +21,7 @@ Write to `agent-workspace/project-input/config.json`:
   "base_path": "<absolute path or null>",
   "length": "short|medium|long",
   "output_format": "markdown|latex|html",
-  "latex_template": "article",
+  "user_template_path": "/path/to/template.tex or null",
   "references": ["2304.12345", ...],
   "interactive": true,
   "novelty_highlight": true,
@@ -31,7 +31,7 @@ Write to `agent-workspace/project-input/config.json`:
 
 ### Instructions
 
-Parse `$ARGUMENTS` for `<path>`, `--base`, `--format`, `--template`, `--interactive`, and `--novelty`.
+Parse `$ARGUMENTS` for `<path>`, `--base`, `--format`, `--interactive`, and `--novelty`.
 
 **Hard rule: if `<path>` is missing, empty, or unresolvable, you MUST prompt interactively. Do NOT silently skip or guess.**
 
@@ -44,7 +44,7 @@ Parse `$ARGUMENTS` for `<path>`, `--base`, `--format`, `--template`, `--interact
    - `3` → `long`
    Default to `medium` if the user skips.
 3. **Output format** — If `--format` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_format")`. Default to `latex` if the user skips.
-4. **LaTeX template** — If `--template` is missing and format is `latex`, prompt the user with `agent_helpers.get_interactive_prompt("ask_template")`. Default to `article`. Store as `latex_template`.
+4. **LaTeX template** — If format is `latex`, prompt the user with `agent_helpers.get_interactive_prompt("ask_template_path")`. The user can provide a path to their own `.tex` template file, or press Enter to use an auto-generated basic template. Store as `user_template_path` (or `null` if skipped).
 5. **Base project** — If `--base` is missing, prompt the user with `agent_helpers.get_interactive_prompt("ask_base_path")`. If the user declines, set `base_path` to `null`.
 6. **Reference papers** — Prompt the user with `agent_helpers.get_interactive_prompt("ask_references")`. Parse the comma-separated input into a list. Store as `references` in config.json (empty list if skipped).
 7. **Interactive mode** — If `--interactive` is missing, default to `true`.
