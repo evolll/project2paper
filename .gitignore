@@ -6,6 +6,8 @@ uv.lock
 *.egg-info/
 .idea/
 .claude/
+.DS_Store
+*/.DS_Store
 agent-workspace/analysis/*
 agent-workspace/output/*
 !agent-workspace/analysis/.gitkeep
