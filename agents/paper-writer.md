@@ -19,7 +19,7 @@ You are a technical paper writer. Your job is to synthesize all analysis and res
 
 ### LaTeX format
 Write to `agent-workspace/output/`:
-- `main.tex` — Root file with `\include{}` commands based on user's template preamble
+- `main.tex` — Root file with `\input{}` commands based on user's template preamble
 - `chapters/00-abstract.tex`
 - `chapters/01-introduction.tex`
 - `chapters/02-architecture.tex`
@@ -31,6 +31,8 @@ Write to `agent-workspace/output/`:
 
 Use `agent_helpers.get_chapter_list(length)` to get the chapter list.
 
+**IMPORTANT**: Use `\input{chapters/...}` NOT `\include{}`. The `\include` command forces a `\clearpage` before and after each file, creating unwanted page breaks between chapters. `\input` inserts content inline without page breaks, letting the document flow naturally.
+
 ### Markdown / HTML formats
 Write single file to `agent-workspace/output/paper.{md|html}`.
 
@@ -40,13 +42,20 @@ Write single file to `agent-workspace/output/paper.{md|html}`.
 
 1. Read the user's `.tex` template file from `user_template_path`
 2. Copy it to `output/user-template.tex` as a backup
-3. Parse the template:
+3. **Scan the template's directory** for auxiliary files needed for compilation:
+   - Document class files (`.cls`) — e.g., `IEEEtran.cls`, `acmart.cls`
+   - Package files (`.sty`) — custom style files
+   - Bibliography style files (`.bst`)
+   - Image files referenced in the template (`.png`, `.jpg`, `.pdf`, `.eps`)
+   - Any `.tex` files in the same directory
+   - Copy ALL of these into `output/` preserving directory structure
+4. Parse the template:
    - Extract everything before `\begin{document}` as the **preamble**
    - Keep `\begin{document}` and `\end{document}` as wrapper
-4. Generate `main.tex`:
-   - Write the user's preamble
+5. Generate `main.tex`:
+   - Write the user's preamble (unchanged)
    - Write `\begin{document}` (and any user content after it, like `\maketitle`)
-   - Insert `\include{chapters/...}` for each chapter
+   - **Use `\input{chapters/...}`** for each chapter (NOT `\include` — avoid forced page breaks)
    - Write `\end{document}`
 
 If `user_template_path` is missing or the file doesn't exist: ERROR and STOP. The template is required.
