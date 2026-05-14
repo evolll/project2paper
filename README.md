@@ -2,6 +2,10 @@
 
 **Turn any codebase into a well-structured technical paper.**
 
+<p align="center">
+  <img src="images/1.png" alt="project2paper — Hero" width="80%">
+</p>
+
 A 6-phase agent pipeline that analyzes any project and produces a publication-quality paper. Works with **Claude Code** (slash command) and **OpenCode** (skill).
 
 ```
@@ -29,6 +33,10 @@ A 6-phase agent pipeline that analyzes any project and produces a publication-qu
 - **Reference papers** — Provide arXiv IDs, DOIs, or PDFs; they are cited in the paper
 - **Placeholders** — Missing content gets `\todo{}` and `\missingfigure{}` markers
 - **Academic tone** — Formal, third-person, problem-to-solution flow by default
+
+<p align="center">
+  <img src="images/3.png" alt="Feature overview" width="80%">
+</p>
 
 ---
 
@@ -86,6 +94,10 @@ All arguments are optional. If omitted, you will be prompted interactively.
 ---
 
 ## Pipeline
+
+<p align="center">
+  <img src="images/2.png" alt="6-phase pipeline overview" width="80%">
+</p>
 
 The command executes **6 phases** sequentially. Each phase reads its agent prompt, processes the project, and saves output to `agent-workspace/`.
 
@@ -152,6 +164,10 @@ Reviews the generated paper for length compliance, academic tone, novelty marker
 
 ## Output Structure
 
+<p align="center">
+  <img src="images/5.png" alt="Output structure" width="80%">
+</p>
+
 ```
 agent-workspace/
 ├── project-input/config.json          # All user settings
@@ -187,6 +203,10 @@ agent-workspace/
 
 ## Novelty Classification
 
+<p align="center">
+  <img src="images/4.png" alt="Novelty classification — 4 levels" width="80%">
+</p>
+
 When `--novelty` is enabled, every component, feature, and design decision is classified and marked inline:
 
 | Marker | Meaning | Color |
@@ -219,6 +239,10 @@ When `--interactive` is enabled (default: true), the agent pauses after each pha
 ---
 
 ## Base Project Comparison
+
+<p align="center">
+  <img src="images/6.png" alt="Base project comparison workflow" width="80%">
+</p>
 
 When `--base /path/to/base-project` is used:
 
