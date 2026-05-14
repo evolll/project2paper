@@ -107,7 +107,7 @@ Cover all areas equally (architecture, features, performance).
 2. Write the paper according to the selected paper type (length and tone). Cover architecture, features, and performance evenly unless `base` comparison highlights specific contribution areas.
 3. If `--novelty`: include novelty markers inline
 4. Output format specified by `format`
-5. **LaTeX output**: write per-chapter `.tex` files under `output/chapters/` + a `main.tex` root file using `\input{}` (NOT `\include` — `\include` forces page breaks between chapters). Copy all auxiliary files from the template's directory (`.cls`, `.sty`, `.bst`, images, etc.) into `output/` so the project compiles. Use the user's template from `user_template_path` — read its preamble and document wrapper, inject chapter inputs between `\begin{document}` and `\end{document}`. The template is REQUIRED (validated in Phase 0).
+5. **LaTeX output**: write per-chapter `.tex` files under `output/chapters/` + a `main.tex` root file using `\input{}` (NOT `\include` — `\include` forces page breaks between chapters). Use the user's template from `user_template_path` — read its preamble and document wrapper, inject chapter inputs between `\begin{document}` and `\end{document}`. The template is REQUIRED (validated in Phase 0).
 6. **Placeholders**: for missing content, use `\todo{}` for text, `\missingfigure{}` for diagrams, `\todo{}` inside table/code environments.
 7. **References**: if the user provided references during interactive setup, generate a `references.bib` file and cite them using `\cite{}`.
 8. Write to `agent-workspace/output/main.tex` (LaTeX) or `agent-workspace/output/paper.{md|html}`.

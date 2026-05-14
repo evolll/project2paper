@@ -61,7 +61,7 @@ Read `agents/project-analyzer.md`. Analyze architecture using Phase 2 context, c
 
 ### Phase 4 — paper-writer
 
-Read `agents/paper-writer.md`. Generate the paper in academic style at the specified length/format. For LaTeX: uses `\input{}` (not `\include{}`) to avoid forced page breaks between chapters; copies template auxiliary files (`.cls`, `.sty`, images, etc.) into output for compilation; writes per-chapter `.tex` files under `output/chapters/` + `main.tex`. Missing content uses `\todo{}` and `\missingfigure{}` placeholders. References are cited and a `references.bib` is generated. Write to `agent-workspace/output/main.tex` (LaTeX) or `agent-workspace/output/paper.{md|html}`.
+Read `agents/paper-writer.md`. Generate the paper in academic style at the specified length/format. For LaTeX: uses `\input{}` (not `\include{}`) to avoid forced page breaks between chapters; writes per-chapter `.tex` files under `output/chapters/` + `main.tex`. Missing content uses `\todo{}` and `\missingfigure{}` placeholders. References are cited and a `references.bib` is generated. Write to `agent-workspace/output/main.tex` (LaTeX) or `agent-workspace/output/paper.{md|html}`.
 
 ### Phase 5 — paper-reviewer
 

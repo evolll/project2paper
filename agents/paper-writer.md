@@ -42,14 +42,7 @@ Write single file to `agent-workspace/output/paper.{md|html}`.
 
 1. Read the user's `.tex` template file from `user_template_path`
 2. Copy it to `output/user-template.tex` as a backup
-3. **Scan the template's directory** for auxiliary files needed for compilation:
-   - Document class files (`.cls`) — e.g., `IEEEtran.cls`, `acmart.cls`
-   - Package files (`.sty`) — custom style files
-   - Bibliography style files (`.bst`)
-   - Image files referenced in the template (`.png`, `.jpg`, `.pdf`, `.eps`)
-   - Any `.tex` files in the same directory
-   - Copy ALL of these into `output/` preserving directory structure
-4. Parse the template:
+3. Parse the template:
    - Extract everything before `\begin{document}` as the **preamble**
    - Keep `\begin{document}` and `\end{document}` as wrapper
 5. Generate `main.tex`:
