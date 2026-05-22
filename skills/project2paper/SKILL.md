@@ -24,6 +24,7 @@ All arguments are optional. If omitted, you will be prompted interactively.
 |----------|---------|-------------|
 | `<path>` | prompted | Path to the project. **Always** asked interactively if omitted |
 | `--base` | none | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
+| `--template` | article | LaTeX template style: article, ieee, acm. Asked interactively if format is latex |
 | `--format` | latex | markdown, latex, html. Asked interactively if omitted |
 | `--interactive` | true | Enable phase-by-phase interaction. Defaults to `true` |
 | `--novelty` | true | Highlight existing work vs novel contributions with inline markers |

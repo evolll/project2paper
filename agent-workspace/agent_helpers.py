@@ -194,6 +194,13 @@ INTERACTIVE_PROMPTS = {
         "3. **HTML** (.html) — Rich rendering in browsers\n\n"
         "Which do you prefer? (1/2/3, or just press Enter for 1)"
     ),
+    "ask_template_style": (
+        "**Choose the LaTeX template style:**\n\n"
+        "1. **Article** — Standard academic article layout, default\n"
+        "2. **IEEE** — IEEE conference/journal format\n"
+        "3. **ACM** — ACM conference format (acmart)\n\n"
+        "Which do you prefer? (1/2/3, or just press Enter for 1)"
+    ),
     "ask_template_path": (
         "**Provide the path to your LaTeX template file.**\n\n"
         "This is your own `.tex` file that defines the document class, packages, and style.\n"
@@ -320,6 +327,7 @@ DEFAULT_CONFIG = {
     "novelty_in_title": True,
     "novelty_in_toc": True,
     "user_template_path": None,
+    "template_style": "article",
     "references": [],
 }
 

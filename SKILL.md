@@ -21,6 +21,7 @@ All arguments are optional. If omitted, you will be prompted interactively.
 | Option | Values | Default | Description |
 |--------|--------|---------|-------------|
 | `--base` | path | — | Path to a baseline project for comparison. Differences will be listed and you will be asked which parts to treat as paper contributions |
+| `--template` | article, ieee, acm | article | LaTeX template style. Asked interactively if format is latex |
 | `--format` | markdown, latex, html | latex | Output format |
 | `--interactive` | flag | true | Enable phase-by-phase interaction with user feedback |
 | `--novelty` | flag | true | Highlight existing work vs novel contributions in the paper |

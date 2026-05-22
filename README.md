@@ -2,6 +2,8 @@
 
 **Turn any codebase into a well-structured technical paper.**
 
+> **v0.3.1** — Added `--template` style selection (article/ieee/acm), improved documentation, and bug fixes.
+
 <p align="center">
   <img src="images/1.png" alt="project2paper — Hero" width="80%">
 </p>
@@ -88,6 +90,7 @@ All arguments are optional. If omitted, you will be prompted interactively.
 | `<path>` | prompted | Path to the project to analyze |
 | `--base` | none | Path to a baseline project for comparison |
 | `--format` | latex | Output format: `markdown`, `latex`, `html` |
+| `--template` | article | LaTeX template style: `article`, `ieee`, `acm` (asked interactively if format is latex) |
 | `--interactive` | true | Enable phase-by-phase interaction (default: on) |
 | `--novelty` | true | Highlight existing work vs novel contributions (default: on) |
 
@@ -304,10 +307,17 @@ project2paper/
 │   ├── project-input/                # Config (generated)
 │   ├── analysis/                     # Intermediate artifacts
 │   └── output/                       # Final paper
+├── CHANGELOG.md                      # Version history
 ├── CLAUDE.md                         # Auto-read by Claude Code
 ├── SKILL.md                          # Usage reference
 └── AGENTS.md                         # Agent architecture guide
 ```
+
+---
+
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ---
 
