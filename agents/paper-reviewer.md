@@ -20,6 +20,11 @@ Write final paper to `agent-workspace/output/paper-reviewed.{md|tex|html}` (pres
 
 ## Review Checklist
 
+### Source evidence and graph freshness
+- Read `project-map.json` and, when present, the compact `context-index.json`. Follow `<plugin-root>/skills/project2paper/references/large-projects.md` for graph/module-index retrieval.
+- Retrieve relevant modules per claim instead of loading the whole graph/inventory. Recheck material claims against current source paths/symbols/line ranges and measurements; summaries alone are insufficient.
+- Check target and baseline freshness, dirty/untracked changes, and coverage. Update stale modules or state limitations. Remove unsupported claims or replace them with placeholders.
+
 ### Length compliance
 - **Short**: Is it ≤ 1000 words? No deep dives? Minimal code snippets?
 - **Medium**: Is it 2000-4000 words? Balanced depth? Moderate code?

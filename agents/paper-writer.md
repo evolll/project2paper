@@ -17,6 +17,8 @@ You are a technical paper writer. Your job is to synthesize all analysis and res
 
 ## Output
 
+Read compact analysis summaries first. When `project-map.json.scan_strategy` or `context-index.json` indicates a graph/module index for either project, retrieve only the module summaries and source evidence needed for the current chapter, following `<plugin-root>/skills/project2paper/references/large-projects.md`. Keep full graphs/inventories out of context. Carry incomplete coverage and unverified claims into explicit limitations/placeholders; graph summaries do not prove performance or novelty.
+
 ### LaTeX format
 Write to `agent-workspace/output/`:
 - `main.tex` — Root file with `\input{}` commands based on user's template preamble

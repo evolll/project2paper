@@ -1,12 +1,19 @@
 ---
 name: project2paper
-description: Analyze any codebase and generate a publication-quality technical paper
-argument-hint: ["[<path>] [--base /path/to/base-project] [--format markdown|latex|html] [--interactive] [--novelty]"]
+description: Analyze a codebase and generate an evidence-backed technical paper, report, or thesis in LaTeX, Markdown, or HTML. Use when the user wants to turn a software project into a paper, compare it with a baseline, or document its architecture and contributions academically.
 ---
 
 # /project2paper
 
 Analyze a codebase and produce a well-structured technical paper. A 6-phase agent pipeline collects settings, scans the project, discovers base models, analyzes novelty, generates an analysis outline, writes the paper, and reviews it.
+
+## Runtime and paths
+
+- Codex invocation: `$project2paper /path/to/project`. Claude Code uses `/project2paper`; OpenCode can invoke the skill in natural language. Arguments are user text, not a shell command. On Codex, use its available question tool or normal conversation for interactive checkpoints; helper functions only format prompts.
+- Resolve symlinks, then resolve the **plugin root** from this skill directory (`../..`), never from the current directory. Read phase prompts from `<plugin-root>/agents/`, helpers and templates from `<plugin-root>/agent-workspace/`. The phase prompts are instructions to execute sequentially; they do not require a particular subagent API.
+- Use the user's current working directory as the **run root**. Resolve every generated `agent-workspace/...` path in the phase prompts under that run root. Create `project-input/`, `analysis/`, and `output/` there before writing. Keep installed plugin files unchanged. If the current directory is the installed plugin/cache, choose a writable run directory outside it and report the location. Resolve the target, baseline, and template paths to absolute paths before changing directories.
+- When a prompt mentions `agent-workspace/agent_helpers.py` or `agent-workspace/templates/`, those are bundled resources under the plugin root, not generated files under the run root. Load helpers by absolute file path (the directory name contains a hyphen).
+- Read only the current phase's prompt. For large projects, read [the large-project workflow](references/large-projects.md) during Phase 1 and carry its retrieval rules into later phases.
 
 ## Usage
 
@@ -61,7 +68,7 @@ Tone and depth are determined by the paper type selected in Phase 0.
 **Agent prompt:** `agents/project-scanner.md`
 
 1. Read config from `agent-workspace/project-input/config.json`
-2. Walk the directory tree, catalog every file (exclude `node_modules/`, `__pycache__/`, `.git/`, `dist/`, `build/`)
+2. Run the bundled `agent-workspace/scan_inventory.py` size preflight before reading source bodies. Keep the full file inventory on disk. If large, follow [the large-project workflow](references/large-projects.md): reuse or build a knowledge graph with an available tool such as Understand Anything, then retrieve relevant modules and source excerpts on demand. If unavailable, use the documented bounded module-index fallback.
 3. Detect primary language and framework
 4. Identify entry points, test files, config files
 5. Count files and lines of code per language
@@ -104,7 +111,7 @@ Cover all areas equally (architecture, features, performance).
 
 **Agent prompt:** `agents/paper-writer.md`
 
-1. Read all analysis files and config
+1. Read config and the compact analysis summaries; retrieve graph/module details only for the chapter being written
 2. Write the paper according to the selected paper type (length and tone). Cover architecture, features, and performance evenly unless `base` comparison highlights specific contribution areas.
 3. If `--novelty`: include novelty markers inline
 4. Output format specified by `format`

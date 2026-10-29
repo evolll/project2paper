@@ -1,0 +1,20 @@
+{
+  "name": "project2paper",
+  "version": "0.4.0",
+  "description": "Generate evidence-backed technical papers from codebases with an interactive six-phase workflow and knowledge-graph-assisted scanning for large projects.",
+  "author": { "name": "evolll" },
+  "homepage": "https://github.com/evolll/project2paper",
+  "repository": "https://github.com/evolll/project2paper",
+  "license": "MIT",
+  "keywords": ["paper", "research", "codebase", "knowledge-graph"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "project2paper",
+    "shortDescription": "Turn codebases into evidence-backed technical papers",
+    "developerName": "evolll",
+    "category": "Developer Tools",
+    "capabilities": ["Interactive", "Write"],
+    "websiteURL": "https://github.com/evolll/project2paper",
+    "defaultPrompt": ["Use $project2paper to analyze my project and generate a technical paper."]
+  }
+}

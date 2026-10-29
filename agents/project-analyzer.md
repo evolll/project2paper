@@ -61,6 +61,8 @@ A markdown file containing the full analysis outline (see outline template below
 
 ## Novelty classification with research context
 
+For a large target or baseline, use `project-map.json.scan_strategy` and `context-index.json` to retrieve one relevant module/subgraph at a time, then verify its claims in current source. Follow `<plugin-root>/skills/project2paper/references/large-projects.md`. Retain evidence paths/symbols/line ranges and coverage limitations in architecture/outline artifacts. Do not load entire graphs or infer novelty merely from graph structure.
+
 Every component MUST include a `novelty` field AND a `novelty_rationale` field referencing evidence.
 
 ### Classification rules (using Phase 2 findings)

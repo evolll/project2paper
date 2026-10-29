@@ -2,13 +2,13 @@
 
 **Turn any codebase into a well-structured technical paper.**
 
-> **v0.3.1** — Added `--template` style selection (article/ieee/acm), improved documentation, and bug fixes.
+> **v0.4.0** — Codex plugin support and knowledge-graph-assisted scanning for large projects.
 
 <p align="center">
   <img src="images/1.png" alt="project2paper — Hero" width="80%">
 </p>
 
-A 6-phase agent pipeline that analyzes any project and produces a publication-quality paper. Works with **Claude Code** (slash command) and **OpenCode** (skill).
+A 6-phase agent pipeline that analyzes a project and produces an evidence-backed technical paper. Works with **Codex** (plugin / skill), **Claude Code** (slash command), and **OpenCode** (skill).
 
 ```
 /project2paper /path/to/project --format latex --novelty
@@ -35,6 +35,8 @@ A 6-phase agent pipeline that analyzes any project and produces a publication-qu
 - **Reference papers** — Provide arXiv IDs, DOIs, or PDFs; they are cited in the paper
 - **Placeholders** — Missing content gets `\todo{}` and `\missingfigure{}` markers
 - **Academic tone** — Formal, third-person, problem-to-solution flow by default
+- **Codex plugin** — Invoke `$project2paper` with the same workflow and templates
+- **Large-project context control** — Size preflight, knowledge graphs via tools such as Understand Anything, module-level retrieval, and a local-index fallback
 
 <p align="center">
   <img src="images/3.png" alt="Feature overview" width="80%">
@@ -43,6 +45,31 @@ A 6-phase agent pipeline that analyzes any project and produces a publication-qu
 ---
 
 ## Quick Start
+
+### Codex
+
+With a Codex CLI version that provides `codex plugin`:
+
+```bash
+codex plugin marketplace add https://github.com/evolll/project2paper.git
+codex plugin add project2paper@evolll-project2paper
+```
+
+Start a new Codex conversation and invoke the skill:
+
+```text
+$project2paper /path/to/your-project --format markdown
+```
+
+For Codex app installations, ask Codex to install the plugin from this repository URL. If your client does not support plugins, clone the complete repository and link the shared skill into the standard skills directory (keep the clone so its prompts/helpers remain available):
+
+```bash
+git clone https://github.com/evolll/project2paper.git ~/project2paper
+mkdir -p ~/.agents/skills
+ln -s ~/project2paper/skills/project2paper ~/.agents/skills/project2paper
+```
+
+Resolve symlinks when finding the plugin root. Restart the conversation after installation. Use `$project2paper` in Codex; `/project2paper` examples below use Claude Code syntax.
 
 ### Claude Code
 
@@ -122,9 +149,27 @@ Gathers all settings from the user interactively:
 
 **Prompt:** `agents/project-scanner.md`
 
-Scans the project directory, catalogs files, detects language and framework. If a base project was provided, both projects are scanned and compared — new files, modified files, removed files, and dependency changes are listed, and you select which areas to treat as contributions.
+Runs a local size preflight before source analysis, saves the full inventory on disk, and detects language/framework from bounded reads. Large projects use a knowledge graph or module index before the later phases. If a base project was provided, its scan strategy is chosen independently; both projects are compared by content and dependencies, and you select which areas to treat as contributions.
 
 **Output:** `agent-workspace/analysis/project-map.json`
+
+#### Large projects: graph first, then retrieve on demand
+
+The default project2paper policy switches to graph mode at **1,000 text files**, **100,000 text lines**, or **1,000,000 estimated tokens** (bytes / 4), or earlier if the available context budget requires it. Counts include docs/config; code-only counts are reported separately. The preflight respects Git ignore rules and excludes dependencies, generated output, graph data, binaries, and symlinks.
+
+- Prefer a compatible installed tool such as [Understand Anything](https://github.com/Egonex-AI/Understand-Anything). Its skill is `$understand` in Codex or `/understand` in Claude Code; current graphs live at `.ua/knowledge-graph.json`, with `.understand-anything/` supported for existing projects. Graph generation can itself consume significant tokens; reuse validated graphs and incremental updates when possible.
+- Verify graph scope, revision, working-tree changes, and freshness. If no tool is available or generation fails, build a bounded local module index and record the fallback/coverage limitations. The scan does not automatically install another plugin.
+- Store a compact overview and graph/index pointers in `context-index.json`. Research, analysis, writing, and review retrieve only relevant modules and current source excerpts. Full inventories/graphs stay on disk; claims still require source or measurement evidence.
+
+The detailed [large-project workflow](skills/project2paper/references/large-projects.md) covers generation, fallback, baseline comparison, and handoff. You can run the sizing helper yourself (Python 3.9+; Git optional):
+
+```bash
+python3 /path/to/project2paper/agent-workspace/scan_inventory.py /path/to/your-project \
+  --output-dir ./agent-workspace/analysis/target \
+  --file-threshold 1000 --line-threshold 100000 --token-threshold 1000000
+```
+
+Read `scan-summary.json` rather than the entire `file-inventory.jsonl`. Outside Git, review the default exclusions and add `--exclude DIRECTORY_NAME` as needed.
 
 ### Phase 2 — Research Extractor (Literature Search)
 
@@ -176,6 +221,10 @@ agent-workspace/
 ├── project-input/config.json          # All user settings
 ├── analysis/
 │   ├── project-map.json               # Phase 1: scanned project structure
+│   ├── target/                        # Size summary + full file inventory
+│   ├── base/                          # Same for an optional baseline
+│   ├── context-index.json             # Graph/module pointers when needed
+│   ├── knowledge/                     # Local module-index fallback, if used
 │   ├── research-findings.json         # Phase 2: base models & patterns
 │   ├── architecture.json              # Phase 3: architecture + novelty
 │   └── analysis-outline.md            # Phase 3: outline for review
@@ -288,13 +337,17 @@ Example template structure:
 
 ```
 project2paper/
+├── .codex-plugin/plugin.json          # Codex plugin registration
+├── .agents/plugins/marketplace.json   # Codex marketplace listing
 ├── .claude-plugin/
 │   ├── plugin.json                   # Claude Code plugin registration
 │   └── marketplace.json              # Marketplace listing
 ├── .opencode/skills/project2paper/
 │   └── SKILL.md                      # OpenCode skill definition
 ├── skills/project2paper/
-│   └── SKILL.md                      # Claude Code command definition
+│   ├── SKILL.md                      # Shared Codex / Claude Code workflow
+│   ├── agents/openai.yaml            # Codex skill UI metadata
+│   └── references/large-projects.md   # Graph + module retrieval workflow
 ├── agents/
 │   ├── project-scanner.md            # Phase 0 + 1: config + scan
 │   ├── research-extractor.md         # Phase 2: literature search
@@ -303,6 +356,7 @@ project2paper/
 │   └── paper-reviewer.md             # Phase 5: review and refine
 ├── agent-workspace/
 │   ├── agent_helpers.py              # Helper library (prompts, markers, chapters)
+│   ├── scan_inventory.py             # Local size preflight + file inventory
 │   ├── templates/                    # Example reference templates
 │   ├── project-input/                # Config (generated)
 │   ├── analysis/                     # Intermediate artifacts
@@ -311,6 +365,18 @@ project2paper/
 ├── CLAUDE.md                         # Auto-read by Claude Code
 ├── SKILL.md                          # Usage reference
 └── AGENTS.md                         # Agent architecture guide
+```
+
+---
+
+## Runtime paths and validation
+
+Bundled prompts, helpers, and templates are read from the installed plugin root. Generated config, analysis, and paper files are written to `agent-workspace/` under the directory where you start the workflow, outside the installed plugin cache. Run each paper workflow in its own directory if you need to retain several runs.
+
+Validate the scanner and plugin packaging with:
+
+```bash
+python3 -m unittest discover -s tests -v
 ```
 
 ---

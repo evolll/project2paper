@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0] — 2026-10-29
+
+### Added
+- Codex plugin manifest, marketplace registration, and skill UI metadata using the shared six-phase workflow (`$project2paper`).
+- Runtime path rules separating installed plugin resources from writable run artifacts.
+- Standard-library size preflight with Git ignore support, disk-backed file inventory, configurable thresholds, and compact summaries.
+- Large-project knowledge-graph workflow using compatible installed tools such as Understand Anything, including graph freshness/coverage checks and a bounded local module-index fallback.
+- On-demand module retrieval and source evidence verification across research, analysis, writing, and review; independent target/baseline indexing.
+
+### Changed
+- Installation and usage documentation now covers Codex, Claude Code, and OpenCode.
+- Baseline modified-file detection requires content comparison rather than size alone.
+
 ## [0.3.1] — 2026-05-22
 
 ### Added

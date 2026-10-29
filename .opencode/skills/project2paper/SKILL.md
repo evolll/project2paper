@@ -12,6 +12,8 @@ metadata:
 
 Turn any codebase into a well-structured technical paper.
 
+Resolve the plugin root as `../../..` from this skill directory. Read `<plugin-root>/skills/project2paper/SKILL.md` for shared runtime/path rules: prompts/helpers/templates are bundled under the plugin root; generated `agent-workspace/` belongs under the writable run root.
+
 ## Usage
 
 All arguments are optional. If omitted, you will be prompted interactively.
@@ -50,7 +52,7 @@ Write `agent-workspace/project-input/config.json` with all gathered settings.
 
 ### Phase 1 — project-scanner
 
-Read `agents/project-scanner.md`. Walk the project directory, catalog files, detect language/framework, write `agent-workspace/analysis/project-map.json`.
+Read `agents/project-scanner.md`. Run the bundled size preflight before reading source bodies. For large projects (including a baseline), follow `<plugin-root>/skills/project2paper/references/large-projects.md`: reuse/build a knowledge graph with an available tool such as Understand Anything, or use the bounded module-index fallback. Keep full inventories/graphs on disk; subsequent phases retrieve only relevant modules and verify claims against source. Write compact `agent-workspace/analysis/project-map.json` plus graph/index pointers when needed.
 
 ### Phase 2 — research-extractor (literature search)
 

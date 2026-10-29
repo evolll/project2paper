@@ -65,6 +65,9 @@ Write to `agent-workspace/analysis/research-findings.json`:
 
 ## Methodology
 
+### Context retrieval
+Read `project-map.json.scan_strategy` first. If a target or baseline has a graph/module index, read the compact `context-index.json` and retrieve only modules relevant to the current dependency/pattern or selected contribution. Follow `<plugin-root>/skills/project2paper/references/large-projects.md`; keep complete graphs and inventories on disk. Verify graph-derived findings in current source excerpts and record paths/symbols/line ranges. Graph summaries alone cannot establish prior art or novelty.
+
 ### 1. Dependency Analysis
 - Read `project-map.json` for detected dependencies and languages
 - For each dependency, determine:

@@ -1,13 +1,13 @@
 # project2paper — Agent Guide
 
-project2paper is a Claude Code plugin that generates a technical paper from any codebase via a 5-phase pipeline.
+project2paper is a Codex / Claude Code plugin and OpenCode skill that generates a technical paper from a codebase via six sequential phases (0–5).
 
-## When the user runs `/project2paper`
+## When the user runs `$project2paper` (Codex) or `/project2paper` (Claude Code)
 
 1. Read `skills/project2paper/SKILL.md` — it defines the full flow
 2. Parse arguments: project path, `--base`, `--format`, `--interactive`, `--novelty`. The LaTeX template is asked interactively if format is latex.
-3. Write `agent-workspace/project-input/config.json` with parsed settings (set `interactive: true` if `--interactive` flag, `novelty_highlight: true` if `--novelty` flag)
-4. Execute Phase 1–5 by reading each agent prompt in sequence
+3. Follow the skill's runtime/path rules: bundled prompts/helpers/templates are under the plugin root; generated `agent-workspace/` is under the writable run root. Execute Phase 0 to gather settings and write config.json (`interactive` and `novelty_highlight` default to true).
+4. Execute Phase 1–5 by reading each agent prompt in sequence. Phase 1 performs a size preflight before reading source. For large targets or baselines, use an available graph tool such as Understand Anything, or a bounded local module index; downstream phases retrieve modules on demand and verify claims against source.
 5. In interactive mode, use `agent-workspace/agent_helpers.py` helper functions for user prompts and novelty rendering
 
 ## Code priorities
@@ -20,6 +20,10 @@ project2paper is a Claude Code plugin that generates a technical paper from any 
 | Path | Purpose |
 |------|---------|
 | `skills/project2paper/SKILL.md` | `/project2paper` command — reads this first |
+| `.codex-plugin/plugin.json` | Codex plugin manifest; uses the shared skill |
+| `.agents/plugins/marketplace.json` | Codex marketplace registration |
+| `skills/project2paper/references/large-projects.md` | Graph-assisted scanning, fallback, and context handoff |
+| `agent-workspace/scan_inventory.py` | Size preflight; inventory on disk, compact summary |
 | `agents/project-scanner.md` | Phase 1: scan project structure |
 | `agents/research-extractor.md` | Phase 2: literature search & base model discovery |
 | `agents/project-analyzer.md` | Phase 3: novelty analysis, outline generation, user review loop |

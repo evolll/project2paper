@@ -99,20 +99,20 @@ If `base_path` is present, `base_comparison` will contain:
 ### Instructions
 
 1. Read `config.json` to get the project path and check `interactive`, `novelty_highlight`, and `base_path` options.
-2. Walk the directory tree (exclude node_modules, __pycache__, .git, dist, build, .venv).
-3. For each file: record path, extension, line count.
+2. Before reading source bodies, run `<plugin-root>/agent-workspace/scan_inventory.py <project-path> --output-dir <run-root>/agent-workspace/analysis/target`. The helper writes a full inventory to disk; read only `scan-summary.json` initially. Its thresholds select `direct` or `knowledge_graph` (1,000 text files / 100,000 lines / 1,000,000 estimated tokens by default).
+3. If graph mode is selected, or source analysis would exceed the available context budget, read `<plugin-root>/skills/project2paper/references/large-projects.md` and follow it before proceeding. Reuse/update or build a graph using a compatible installed tool such as Understand Anything; if unavailable, build the bounded local module index described there. Write `context-index.json` and record the provider, coverage, freshness, and limitations. Never load the full graph or inventory into context. In direct mode, inspect relevant files in bounded batches.
 4. Detect the primary language and framework.
 5. Identify entry points, test files, config files.
-6. Count total files and lines of code per language.
+6. Use the inventory for file/line counts. The helper counts text files (including docs/config); derive language-specific code counts separately and label the distinction. Write compact module summaries plus `scan_strategy` in project-map.json: mode (`direct`, `knowledge_graph`, or `module_index`), reason, inventory_path, summary_path, context_index_path (null for direct), provider, limitations. Resolve relative artifact paths from the generated agent-workspace directory. Persist paths/symbols/line ranges for source evidence rather than copying full source files.
 
 ### Base project comparison (config.base_path is set)
 
 If a `base_path` is provided in config.json:
 
-7. **Scan the base project** using the same exclusions and rules as the target project.
+7. **Scan the base project** with the same helper, thresholds, and exclusions, writing to `analysis/base`. Decide its strategy independently of the target and record its graph/index separately in context-index.json when needed.
 8. **Compare the two projects** and generate a difference outline covering:
     - New files/directories (present in target, absent in base)
-    - Modified files (same path but different content/size)
+    - Modified files (same path but different contents; compare hashes or content, not size alone)
     - Removed files/directories (present in base, absent in target)
     - Added dependencies (in target but not in base)
     - Removed dependencies (in base but not in target)
@@ -120,7 +120,7 @@ If a `base_path` is provided in config.json:
 9. **Present the difference outline** to the user as an interactive prompt. Use `agent_helpers.get_interactive_prompt("base_comparison_review", comparison=...)` or a custom prompt.
 10. **Ask the user to select contributions**: "Which of the following areas should be treated as paper contributions (novelty points)?" Present a numbered list of the detected new feature areas. Allow the user to select one or more by number, or type `all`.
 11. **Store the user's selection** in `base_comparison.user_selected_contributions`.
-12. **Store the comparison** in the output JSON under `base_comparison`.
+12. **Store the comparison** in the output JSON under `base_comparison`. For large comparisons, keep complete path lists in a separate artifact and store counts, bounded previews, selected areas, and its path here; downstream phases retrieve the relevant subset.
 
 If `interactive` is false, automatically select all detected new feature areas as contributions and store them.
 

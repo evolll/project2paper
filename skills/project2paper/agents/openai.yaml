@@ -1,0 +1,4 @@
+interface:
+  display_name: "project2paper"
+  short_description: "Generate technical papers from code with source evidence"
+  default_prompt: "Use $project2paper to analyze my project and generate a technical paper."

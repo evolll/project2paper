@@ -2,7 +2,7 @@
 
 ## How to use
 
-project2paper is a Claude Code plugin with a single slash command:
+project2paper supports Codex (`$project2paper`), Claude Code (`/project2paper`), and OpenCode (natural-language skill invocation). Read `skills/project2paper/SKILL.md` for the shared workflow and runtime/path rules. Bundled prompts/helpers are under the plugin root; generated artifacts go into the writable run root's `agent-workspace/`.
 
 ```
 /project2paper
@@ -45,7 +45,7 @@ Write `agent-workspace/project-input/config.json` with all gathered settings.
 
 ### Phase 1 — project-scanner
 
-Read `agents/project-scanner.md`. Walk the project directory, catalog files, detect language/framework. If `--base` is provided, compare with the base project, list differences, and ask the user which parts to treat as contributions. Write `agent-workspace/analysis/project-map.json`.
+Read `agents/project-scanner.md`. Run the bundled size preflight before reading source bodies. For a large target or baseline, follow `skills/project2paper/references/large-projects.md`: reuse/build a graph with an available tool such as Understand Anything, or fall back to a bounded local module index. Later phases retrieve relevant modules and verify claims against source. If `--base` is provided, compare with the base project, list differences, and ask the user which parts to treat as contributions. Write compact `agent-workspace/analysis/project-map.json` and graph/index pointers when needed; keep complete inventories and graphs on disk.
 
 ### Phase 2 — research-extractor (literature search)
 
